@@ -1,12 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const nftSlice = createSlice({
-  name: 'createNFT',
+  name: "createNFT",
   initialState: {
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     image: [],
-    attributes: [{ name: '', value: '' }],
+    attributes: [{ atype: "", akey: "", avalue: "" }],
   },
   reducers: {
     incrementName: (state, action) => {
@@ -24,15 +24,21 @@ export const nftSlice = createSlice({
     incrementAttributes: (state, action) => {
       // console.log(action);
 
-      if (action.payload === 'plus') {
-        state.attributes = [...state.attributes, { name: '', value: '' }];
+      if (action.payload === "plus") {
+        state.attributes = [
+          ...state.attributes,
+          { atype: "", akey: "", avalue: "" },
+        ];
       }
-      const { name, value, index } = action.payload;
-      if (name !== undefined) {
-        state.attributes[index].name = name;
+      const { atype, akey, avalue, index } = action.payload;
+      if (atype !== undefined) {
+        state.attributes[index].atype = atype;
       }
-      if (value !== undefined) {
-        state.attributes[index].value = value;
+      if (akey !== undefined) {
+        state.attributes[index].akey = akey;
+      }
+      if (avalue !== undefined) {
+        state.attributes[index].avalue = avalue;
       }
     },
   },

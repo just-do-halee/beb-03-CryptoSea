@@ -1,13 +1,13 @@
-import styled from 'styled-components';
-import { useState } from 'react';
-import { Button } from '@mui/material';
-import { incrementAttributes } from '../../redux/createNFT/nftSlice.js';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import styled from "styled-components";
+import { useState } from "react";
+import { Button } from "@mui/material";
+import { incrementAttributes } from "../../redux/createNFT/nftSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
 
-import CreateContaier from '../common/CreateContainer';
-import FlexContainer from '../common/FlexContainer';
-import StyledInput from '../common/StyledInput';
+import CreateContaier from "../common/CreateContainer";
+import FlexContainer from "../common/FlexContainer";
+import StyledInput from "../common/StyledInput";
 
 const UploadAttributes = () => {
   const dispatch = useDispatch();
@@ -26,28 +26,36 @@ const UploadAttributes = () => {
       <p>Add a property to your nft.</p>
       {attributes.map((value, index) => {
         return (
-          <>
+          <div key={index}>
             <FlexContainer>
               <StyledInput
-                placeholder="Name"
+                placeholder="Type"
                 onChange={(e) =>
-                  dispatch(incrementAttributes({ name: e.target.value, index }))
+                  dispatch(
+                    incrementAttributes({ atype: e.target.value, index })
+                  )
+                }
+              />
+              <StyledInput
+                placeholder="Key"
+                onChange={(e) =>
+                  dispatch(incrementAttributes({ akey: e.target.value, index }))
                 }
               />
               <StyledInput
                 placeholder="Value"
                 onChange={(e) =>
                   dispatch(
-                    incrementAttributes({ value: e.target.value, index })
+                    incrementAttributes({ avalue: e.target.value, index })
                   )
                 }
               />
             </FlexContainer>
-          </>
+          </div>
         );
       })}
-      {/* 폼을 돌아도 하나만 들어가 ㅠㅠㅠ 이거 어떻게 해결할수 있을까 ㅠㅠ */}
-      <Button onClick={() => dispatch(incrementAttributes('plus'))}>
+
+      <Button onClick={() => dispatch(incrementAttributes("plus"))}>
         AddMore
       </Button>
     </CreateContaier>
