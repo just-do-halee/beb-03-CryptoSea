@@ -1,4 +1,4 @@
-import FormInput from '../common/FromInput.js';
+import FormInput from '../common/FormInput.js';
 import CreateContaier from '../common/CreateContainer.js';
 import { useDispatch } from 'react-redux';
 import { incrementName } from '../../redux/createNFT/nftSlice.js';

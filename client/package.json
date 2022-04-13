@@ -6,12 +6,16 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.6.1",
     "@mui/material": "^5.6.0",
     "@mui/styled-engine-sc": "^5.5.2",
     "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "@thirdweb-dev/react": "^2.0.4",
+    "@thirdweb-dev/sdk": "^2.0.29",
+    "ethers": "^5.6.2",
     "ipfs-http-client": "^56.0.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -23,7 +27,8 @@
     "react-scripts": "^4.0.3",
     "styled-components": "^5.3.5",
     "styled-reset": "^4.3.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "web3": "^1.7.3"
   },
   "scripts": {
     "start": "react-scripts start",

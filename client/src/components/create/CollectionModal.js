@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Modal, Box, Typography, Button } from '@mui/material';
 import { useState } from 'react';
 import StyledInput from '../common/StyledInput.js';
-import { useForm } from 'react-hook-form';
+
 const style = {
   position: 'absolute',
   top: '50%',

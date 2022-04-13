@@ -1,10 +1,11 @@
-import styled from 'styled-components';
-import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import styled from "styled-components";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 const Container = styled.section`
   /* background-color: skyblue; */
-  /* width: 1500px; */
+  width: 1300px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -86,7 +87,7 @@ const Section = () => {
           <img
             src="https://lh3.googleusercontent.com/uMYGSBdEi-kLG7_z2dfOoGQYRFdU9_Dw0LSwzsG94MCGnuQawRw9rG-mMpBHY65we-ugoiD80NCiDzK8DI7TjfOWcHKJRqUrhbIQnxk=s550"
             alt="zz"
-          />{' '}
+          />{" "}
           {/* 이미지 받아와야함. */}
           <div className="userInfo"> {/* 난중에 수정 */}</div>
         </RightBox>

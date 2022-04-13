@@ -1,18 +1,18 @@
-import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
-import { Button } from '@mui/material';
-import { useRef, useState } from 'react';
+import styled from "styled-components";
+import { useForm } from "react-hook-form";
+import { Button } from "@mui/material";
+import { useRef, useState } from "react";
 
-import StyledInput from '../common/StyledInput';
+import StyledInput from "../common/StyledInput";
 // 아이콘 쓰고 싶은데 없는게 많네...
 const communityLink = [
-  { link: 'https://twitter.com/opensea', title: 'twitter' },
-  { link: 'https://www.instagram.com/opensea/', title: 'instagram' },
-  { link: 'https://discord.com/invite/opensea', title: 'discord' },
-  { link: 'https://www.reddit.com/r/opensea', title: 'reddit' },
-  { link: 'https://www.youtube.com/c/OpenSeaTV', title: 'youtube' },
-  { link: 'https://www.tiktok.com/@opensea?lang=en', title: 'tiktok' },
-  { link: 'https://opensea.io/blog/newsletter/', title: 'blog' },
+  { link: "https://twitter.com/opensea", title: "twitter" },
+  { link: "https://www.instagram.com/opensea/", title: "instagram" },
+  { link: "https://discord.com/invite/opensea", title: "discord" },
+  { link: "https://www.reddit.com/r/opensea", title: "reddit" },
+  { link: "https://www.youtube.com/c/OpenSeaTV", title: "youtube" },
+  { link: "https://www.tiktok.com/@opensea?lang=en", title: "tiktok" },
+  { link: "https://opensea.io/blog/newsletter/", title: "blog" },
 ];
 
 const Container = styled.footer`
@@ -94,7 +94,7 @@ const StyledLink = styled.div`
 `;
 
 const Footbar = () => {
-  const { register, handleSubmit, watch } = useForm({ mode: 'onChange' });
+  const { register, handleSubmit, watch } = useForm({ mode: "onChange" });
   const emailInput = useRef();
   const [emailText, setEmailText] = useState();
 
@@ -103,19 +103,19 @@ const Footbar = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    // console.log(data);
     const url = `https://blog.opensea.io/newsletter/?email=${data}`;
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
   const onError = (error) => {
-    window.alert('이메일 형식에 맞게 입력하세요.');
-    setEmailText('');
+    window.alert("이메일 형식에 맞게 입력하세요.");
+    setEmailText("");
   };
 
   const communityPage = (url) => {
     window.open(url);
   };
-  console.log(watch());
+  // console.log(watch());
   return (
     <Container>
       <LeftBox>
@@ -131,7 +131,7 @@ const Footbar = () => {
             ref={emailInput}
             value={emailText}
             onChange={onChange}
-            {...register('Email', {
+            {...register("Email", {
               required: true,
               pattern:
                 /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,

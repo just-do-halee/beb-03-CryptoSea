@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
 
-import FormInput from '../common/FromInput';
+import FormInput from '../common/FormInput.js';
 import CreateContaier from '../common/CreateContainer.js';
-import { incrementLink } from '../../redux/createNFT/nftSlice';
+import { incrementLink } from '../../redux/createNFT/nftSlice.js';
 
 const UploadLink = () => {
   const dispatch = useDispatch();

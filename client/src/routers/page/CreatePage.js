@@ -1,12 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
-import UploadCollection from '../../components/create/UploadCollection.js';
-import UploadDescription from '../../components/create/UploadDescription.js';
-import UploadImg from '../../components/create/UploadImg.js';
-import UploadLink from '../../components/create/UploadLink.js';
-import UploadName from '../../components/create/UploadName.js';
-import { Button } from '@mui/material';
+import React from "react";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { create } from "ipfs-http-client";
+import { Button } from "@mui/material";
+import UploadDescription from "../../components/create/UploadDescription.js";
+import UploadImg from "../../components/create/UploadImg.js";
+import UploadLink from "../../components/create/UploadLink.js";
+import UploadName from "../../components/create/UploadName.js";
+
+import UploadAttributes from "../../components/create/UploadAttribues.js";
+import { web3 } from "../../web3/web3";
+
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
+
 const Container = styled.section`
   font-size: 14.5px;
   color: rgb(53, 56, 64);
@@ -35,12 +41,66 @@ const Container = styled.section`
     }
   }
 `;
+
 const CreateButton = styled(Button)`
   width: 200px;
   height: 50px;
   border-radius: 20px;
 `;
+
 const CreatePage = () => {
+  const nftData = useSelector((state) => state.createNFT);
+  const myWalletAdress = useSelector((state) => state.accounts);
+  console.log(nftData);
+  const ipfsTransferImage = async () => {
+    const { image } = nftData;
+    //image = Buffer
+    const client = create("https://ipfs.infura.io:5001/api/v0");
+    try {
+      const created = await client.add(image);
+      console.log(created);
+      const cid = created.cid._baseCache.get("z");
+      console.log(cid);
+      ipfsTransferMetaData(cid);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const ipfsTransferMetaData = async (cid) => {
+    const { name, description, attributes } = nftData;
+    const metaData = {
+      ctype: "ipfs",
+      cid,
+      name,
+      description,
+      attributes,
+    };
+    try {
+      const client = create("https://ipfs.infura.io:5001/api/v0");
+      const created = await client.add(JSON.stringify(metaData));
+      console.log(created);
+      const cid = created.cid._baseCache.get("z");
+      console.log(cid);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // const sendTransaction = async (metaCid, ContractAddress) => {
+  //   console.log(myWalletAdress);
+  //   try {
+  //     web3.eth.sendTransaction({
+  //       from: ContractAddress,
+  //       to: myWalletAdress,
+  //       value:,
+  //       data:
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
   return (
     <Container>
       <h1>Create New Item</h1>
@@ -49,12 +109,12 @@ const CreatePage = () => {
       </p>
       <UploadImg />
       <UploadName />
-      <UploadLink />
+      {/* <UploadLink /> */}
       <UploadDescription />
-      {/* <UploadCollection /> */}
-
-      <CreateButton variant="contained">Create</CreateButton>
-      {/* onClick 시 서버에 createNft 전역상태 보내주기 */}
+      <UploadAttributes />
+      <CreateButton variant="contained" onClick={ipfsTransferImage}>
+        Create
+      </CreateButton>
     </Container>
   );
 };
