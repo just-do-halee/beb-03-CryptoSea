@@ -1,3 +1,0 @@
-# CryptoSea
-
-NFT Project 
