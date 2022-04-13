@@ -60,6 +60,7 @@ const CreatePage = () => {
       const created = await client.add(image);
       console.log(created);
       const cid = created.cid._baseCache.get("z");
+      console.log(cid);
       ipfsTransferMetaData(cid);
     } catch (error) {
       console.log(error.message);

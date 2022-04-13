@@ -1,4 +1,4 @@
-import FlexContainer from "../../components/common/FlexContainer";
+import FlexContainer from "./FlexContainer";
 import styled from "styled-components";
 import { Box, Typography, Modal, Button } from "@mui/material";
 import { useState } from "react";
@@ -21,7 +21,7 @@ const ImageBox = styled.div`
   -webkit-box-pack: center;
   justify-content: center;
   max-height: 100%;
-  max-width: 100%;
+  width: 300px;
   overflow: hidden;
   position: relative;
   border-radius: 15px;
@@ -148,6 +148,7 @@ const NFT = (props) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { image, name, price } = props;
+
   return (
     <NFTContainer>
       <ImageBox>
