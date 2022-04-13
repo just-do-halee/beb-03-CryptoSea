@@ -21,7 +21,6 @@ async function run() {
     "e55e04b92efa55130b2d327a8d2c82ac86d289efadfcbc900f08897ad19d5d9d"
   );
 
-  console.log(await api.getBalance(api.account));
   console.log(api.account);
 
   const result = await api.mintNFT(
@@ -35,10 +34,6 @@ async function run() {
   const tokenId = ~~result.events.Transfer.returnValues.tokenId;
 
   //console.log("tokenId : " + JSON.stringify(tokenId));
-
-  const name = await api.name();
-
-  console.log("name : " + name);
 
   const owner = await api.owner();
 
