@@ -7,18 +7,17 @@ const CAPI = require("cryptosea-api");
 // const api = CAPI.new(window.ethereum);
 
 const provider = new CAPI.newProvider.HttpProvider(
-  //"https://ropsten.infura.io/v3/ddf01a2edfc045119de12a1e3fd838ec"
-  "http://127.0.0.1:7545"
+  "https://ropsten.infura.io/v3/ddf01a2edfc045119de12a1e3fd838ec"
+  //"http://127.0.0.1:7545"
 );
 
 const api = CAPI.new(provider);
-console.log("initial", api.account);
 
 // 인프라라 계정이 없는 듯함
 
 async function run() {
   await api.connectWallet(
-    "e55e04b92efa55130b2d327a8d2c82ac86d289efadfcbc900f08897ad19d5d9d"
+    "e5e3e937a6aebd3bc3e1e864faba79fc475ba9a88e2ef6b2e9f69b8be3e5e79b"
   );
 
   console.log(api.account);

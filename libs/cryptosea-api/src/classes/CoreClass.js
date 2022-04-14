@@ -4,7 +4,7 @@ const erc721Abi = require("../erc721Abi");
 module.exports = class {
   constructor(
     provider,
-    cryptoseaContAddr = "0x5b22ce9345F6D67b83D34108f790dB9cc20eD9Ea"
+    cryptoseaContAddr = "0xc92ACbE91cB81719db4752e93a732c05a32bFfD6"
   ) {
     this.provider = provider;
     this.web3 = new Web3(provider);
@@ -23,9 +23,11 @@ module.exports = class {
     if (localPrivKey === undefined) return this;
 
     // local
-    const { address } = await this.eth.accounts.privateKeyToAccount(
+    /* const { address } = await this.eth.accounts.privateKeyToAccount(
       localPrivKey
-    );
+    ); */
+    const { address } = await this.eth.accounts.wallet.add(localPrivKey);
+
     this.account = address;
     return this;
   }
@@ -72,16 +74,28 @@ module.exports = class {
 
     const tx = await this.eth.getTransaction(txHash);
 
-    const inputData = tx.input;
+    if (typeof tx !== "object") return;
+
+    const { input } = tx;
+
+    if (typeof input !== "string" || input === "0x" || input === "") {
+      tx.input = {};
+      return tx;
+    }
+
     let removed = `0x${inputData.substr(10)}`;
 
-    const result = this.eth.abi.decodeParameters(
-      [
-        { type: "address", name: "recipient" },
-        { type: "string", name: "tokenURI" },
-      ],
-      removed
-    );
+    try {
+      const result = this.eth.abi.decodeParameters(
+        [
+          { type: "address", name: "recipient" },
+          { type: "string", name: "tokenURI" },
+        ],
+        removed
+      );
+    } catch (err) {
+      console.log(err);
+    }
 
     tx.input = result;
     return tx;
