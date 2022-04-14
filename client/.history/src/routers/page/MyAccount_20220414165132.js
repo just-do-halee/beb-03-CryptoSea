@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Avatar } from "@mui/material";
+import { Avatar, Box, Typography, Modal, Button } from "@mui/material";
 import CreateContaier from "../../components/common/CreateContainer";
 
 import { useEffect } from "react";

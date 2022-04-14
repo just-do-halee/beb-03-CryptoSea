@@ -8,8 +8,8 @@ import UploadImg from "../../components/create/UploadImg.js";
 import UploadName from "../../components/create/UploadName.js";
 
 import UploadAttributes from "../../components/create/UploadAttribues.js";
-
-import getAccount from "../../Controller/getAccount.js";
+import { web3 } from "../../web3/web3";
+import getAccount from "../../../.history/src/Controller/getAccount_20220414000801";
 
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 

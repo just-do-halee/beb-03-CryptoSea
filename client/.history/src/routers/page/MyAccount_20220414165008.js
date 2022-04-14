@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { Avatar } from "@mui/material";
+import { Avatar, Box, Typography, Modal, Button } from "@mui/material";
 import CreateContaier from "../../components/common/CreateContainer";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import NFT from "../../components/common/NFT.js";
 
 import FlexContainer from "../../components/common/FlexContainer";
-
+import getAccount from "../../Controller/getAccount";
 import { useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
@@ -63,6 +63,7 @@ const NFTContainer = styled(FlexContainer)`
 `;
 
 const MyAccount = () => {
+  const [account, setAccount] = useState();
   const accounts = useSelector((state) => state.accounts.accounts);
   const navigate = useNavigate();
   useEffect(() => {
@@ -71,7 +72,7 @@ const MyAccount = () => {
     }
   }, [accounts]);
 
-  console.log(accounts);
+  console.log(account);
   return (
     <MyAccountContainer>
       <div className="top-background">
@@ -86,7 +87,7 @@ const MyAccount = () => {
             src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"
             alt=""
           />
-          <div>{accounts}</div>
+          <div>{account}</div>
         </div>
       </div>
       {/* useEffect 로 계정에 있는 데이터들 받아와서 <NFT랜더링>해야함 */}

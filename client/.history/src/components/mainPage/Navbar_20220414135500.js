@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import getAccount from "../../Controller/getAccount";
 import connectWallet from "../../Controller/ConnectWallet";
 import disConnectWallet from "../../Controller/disConnectWallet";
-import { logIn, logOut } from "../../redux/account/accountSlice";
 
 const NavbarContainer = styled.nav`
   width: 1300px;
@@ -64,12 +63,8 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [accounts, setAccounts] = useState("");
   useEffect(() => {
-    if (accounts === "") {
-      dispatch(logOut);
-    } else {
-      dispatch(logIn(accounts));
-    }
-  }, [accounts]);
+    setAccounts(getAccount);
+  }, []);
 
   return (
     <NavbarContainer>

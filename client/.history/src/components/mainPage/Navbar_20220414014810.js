@@ -11,8 +11,6 @@ import { Link } from "react-router-dom";
 
 import getAccount from "../../Controller/getAccount";
 import connectWallet from "../../Controller/ConnectWallet";
-import disConnectWallet from "../../Controller/disConnectWallet";
-import { logIn, logOut } from "../../redux/account/accountSlice";
 
 const NavbarContainer = styled.nav`
   width: 1300px;
@@ -43,9 +41,6 @@ const NavbarContainer = styled.nav`
     display: flex;
     justify-content: space-between;
   }
-  .log-out {
-    cursor: pointer;
-  }
 `;
 const SearchInput = styled(StyledInput)`
   width: 500px;
@@ -62,15 +57,10 @@ const Logo = styled.img.attrs({
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const [accounts, setAccounts] = useState("");
+  const [accounts, setAccounts] = useState('');
   useEffect(() => {
-    if (accounts === "") {
-      dispatch(logOut);
-    } else {
-      dispatch(logIn(accounts));
-    }
-  }, [accounts]);
-
+    setAccounts(getAccount);
+  }, []);
   return (
     <NavbarContainer>
       <Link to="/">
@@ -102,20 +92,12 @@ const Navbar = () => {
           )}
         </li>
         <li>
-          {accounts === "" ? (
-            <AccountBalanceWalletIcon
-              color="action"
-              fontSize="large"
-              onClick={() => connectWallet(getAccount(setAccounts))}
-            />
-          ) : (
-            <div
-              className="log-out"
-              onClick={() => disConnectWallet(setAccounts)}
-            >
-              Log Out
-            </div>
-          )}
+          {account?}
+          <AccountBalanceWalletIcon
+            color="action"
+            fontSize="large"
+            onClick={() => connectWallet(dispatch)}
+          />
         </li>
       </ul>
     </NavbarContainer>

@@ -69,8 +69,7 @@ const Navbar = () => {
     } else {
       dispatch(logIn(accounts));
     }
-  }, [accounts]);
-
+  }, []);
   return (
     <NavbarContainer>
       <Link to="/">

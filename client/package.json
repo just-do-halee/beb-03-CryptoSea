@@ -13,8 +13,6 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
-    "@thirdweb-dev/react": "^2.0.4",
-    "@thirdweb-dev/sdk": "^2.0.29",
     "ethers": "^5.6.2",
     "ipfs-http-client": "^56.0.2",
     "react": "^18.0.0",

@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { Avatar } from "@mui/material";
+import { Avatar, Box, Typography, Modal, Button } from "@mui/material";
 import CreateContaier from "../../components/common/CreateContainer";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import NFT from "../../components/common/NFT.js";
 
 import FlexContainer from "../../components/common/FlexContainer";
-
+import getAccount from "../../Controller/getAccount";
 import { useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
