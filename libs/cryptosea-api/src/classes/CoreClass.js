@@ -1,3 +1,5 @@
+const Utils = require("../functions/utils");
+
 const Web3 = require("web3");
 const erc721Abi = require("../erc721Abi");
 
@@ -72,9 +74,8 @@ module.exports = class {
     /* txHash =
       "0xc2d6ab845405783ae61d96a598ecf9f44886538c930f46d7ac816b10a094a540"; */
 
-    const tx = await this.eth.getTransaction(txHash);
-
-    if (typeof tx !== "object") return;
+    const tx = await this.eth.getTransaction(Utils.attach0x(txHash));
+    if (!tx) return;
 
     const { input } = tx;
 
@@ -83,7 +84,7 @@ module.exports = class {
       return tx;
     }
 
-    let removed = `0x${inputData.substr(10)}`;
+    let removed = `0x${input.slice(10)}`;
 
     const result = this.eth.abi.decodeParameters(
       [
