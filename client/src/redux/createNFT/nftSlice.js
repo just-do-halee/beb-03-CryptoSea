@@ -5,7 +5,7 @@ export const nftSlice = createSlice({
   initialState: {
     name: "",
     description: "",
-    image: [],
+    image: {},
     attributes: [{ atype: "", akey: "", avalue: "" }],
   },
   reducers: {
@@ -13,6 +13,7 @@ export const nftSlice = createSlice({
       state.name = action.payload;
     },
     incrementImgFile: (state, action) => {
+      // console.log(action.payload);
       state.image = action.payload;
     },
     incrementLink: (state, action) => {

@@ -30,11 +30,11 @@ const Container = styled.section`
 
 const ItemContainer = styled.div`
   width: 1000px;
-  height: 900px;
-
+  height: 950px;
   display: flex;
   justify-content: space-around;
-  /* align-items: flex-start; */
+
+  align-items: flex-start;
   flex-wrap: wrap;
   /* border: 1px solid red; */
   @media screen and (max-width: 1000px) {
@@ -67,7 +67,7 @@ const Item = styled.div`
   }
   p {
     width: 300px;
-    height: 20px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;

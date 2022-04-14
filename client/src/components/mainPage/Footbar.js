@@ -12,6 +12,7 @@ const Container = styled.footer`
   display: flex;
   justify-content: center;
   align-items: center;
+  /* border: 1px solid black; */
   background-color: #5187e4;
 `;
 
@@ -28,6 +29,7 @@ const LeftBox = styled.div`
   width: 50%;
   padding-top: 40px;
   align-items: flex-start;
+  justify-content: center;
   text-align: left;
   padding-right: 64px;
   /* border: 1px solid black; */
@@ -50,7 +52,7 @@ const RightBox = styled.div`
   color: rgb(255, 255, 255);
   text-align: left;
   box-sizing: border-box;
-
+  /* border: 1px solid black; */
   -webkit-box-pack: center;
   justify-content: center;
   display: flex;

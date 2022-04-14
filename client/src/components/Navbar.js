@@ -3,16 +3,16 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import StyledInput from "../common/StyledInput";
+import StyledInput from "./common/StyledInput";
 
 import { useDispatch } from "react-redux";
 
 import { Link } from "react-router-dom";
 
-import getAccount from "../../Controller/getAccount";
-import connectWallet from "../../Controller/ConnectWallet";
-import disConnectWallet from "../../Controller/disConnectWallet";
-import { logOut } from "../../redux/account/accountSlice";
+import getAccount from "../Controller/getAccount";
+import connectWallet from "../Controller/ConnectWallet";
+import disConnectWallet from "../Controller/disConnectWallet";
+import { logIn, logOut } from "../redux/account/accountSlice";
 
 const NavbarContainer = styled.nav`
   width: 1300px;
@@ -64,10 +64,13 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [accounts, setAccounts] = useState("");
   useEffect(() => {
-    if (accounts !== "") {
+    if (accounts === "") {
       dispatch(logOut);
+    } else {
+      dispatch(logIn(accounts));
     }
-  }, []);
+  }, [accounts]);
+
   return (
     <NavbarContainer>
       <Link to="/">

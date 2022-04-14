@@ -10,7 +10,8 @@ import UploadName from "../../components/create/UploadName.js";
 import UploadAttributes from "../../components/create/UploadAttribues.js";
 
 import getAccount from "../../Controller/getAccount.js";
-
+import web3 from "../../web3/web3.js";
+import { erc721Abi } from "../../web3/abi.js";
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
 const Container = styled.section`
@@ -55,55 +56,68 @@ const CreatePage = () => {
   }, []);
   const nftData = useSelector((state) => state.createNFT);
 
-  console.log(nftData);
+  console.log(`nftData : ${nftData}`);
   const ipfsTransferImage = async () => {
     const { image } = nftData;
-    //image = Buffer
+
     const client = create("https://ipfs.infura.io:5001/api/v0");
     try {
-      const created = await client.add(image);
-      console.log(created);
+      const created = await client.add(image.buffer);
+      // console.log(created);
       const cid = created.cid._baseCache.get("z");
-      console.log(cid);
-      ipfsTransferMetaData(cid);
+      // console.log(cid);
+      await ipfsTransferMetaData(cid);
+      console.log("ipfs 이미지전송 성공");
     } catch (error) {
       console.log(error.message);
     }
   };
 
   const ipfsTransferMetaData = async (cid) => {
-    const { name, description, attributes } = nftData;
+    const { name, description, attributes, image } = nftData;
+    let { type } = image;
+    type = type.split("/");
+    const cext = type[type.length - 1];
+    console.log(`image type = ${cext}`);
     const metaData = {
       ctype: "ipfs",
       cid,
+      cext,
       name,
       description,
       attributes,
     };
+    console.log(`metaData = ${metaData}`);
     try {
       const client = create("https://ipfs.infura.io:5001/api/v0");
       const created = await client.add(JSON.stringify(metaData));
-      console.log(created);
+      console.log(`cid = ${JSON.stringify(created.cid._baseCache.get("z"))}`);
       const cid = created.cid._baseCache.get("z");
-      console.log(cid);
+      await sendTransaction(cid);
+      console.log("metaData ipfs 성공");
     } catch (err) {
       console.log(err);
     }
   };
 
-  // const sendTransaction = async (metaCid, ContractAddress) => {
-  //   console.log(myWalletAdress);
-  //   try {
-  //     web3.eth.sendTransaction({
-  //       from: ContractAddress,
-  //       to: myWalletAdress,
-  //       value:,
-  //       data:
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const sendTransaction = async (metaCid) => {
+    const CA = "0xc92ACbE91cB81719db4752e93a732c05a32bFfD6";
+    const nftContract = await new web3.eth.Contract(erc721Abi, CA);
+
+    try {
+      const params = {
+        from: account,
+        to: CA,
+        value: 0,
+        data: nftContract.methods.mintNFT(metaCid),
+      };
+      const hash = await web3.eth.sendTransaction(params);
+
+      console.log(hash);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Container>
