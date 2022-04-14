@@ -1,7 +1,9 @@
 import styled from 'styled-components';
-import CreateContaier from '../common/CreateContainer.js';
-import FormInput from '../common/FromInput.js';
 import { useDispatch } from 'react-redux';
+
+import CreateContaier from '../common/CreateContainer.js';
+import FormInput from '../common/FormInput.js';
+
 import { incrementDescription } from '../../redux/createNFT/nftSlice.js';
 
 const TextAreaInput = styled(FormInput)`

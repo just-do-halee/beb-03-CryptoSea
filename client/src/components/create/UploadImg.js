@@ -1,8 +1,10 @@
-import styled from 'styled-components';
-import { FaRegImage } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
-import CreateContaier from '../common/CreateContainer.js';
-import { incrementImgFile } from '../../redux/createNFT/nftSlice.js';
+import styled from "styled-components";
+
+import { useDispatch } from "react-redux";
+import { useRef, useState } from "react";
+import CreateContaier from "../common/CreateContainer.js";
+import { incrementImgFile } from "../../redux/createNFT/nftSlice.js";
+import { Button } from "@mui/material";
 
 const Container = styled(CreateContaier)`
   div {
@@ -29,18 +31,18 @@ const Container = styled(CreateContaier)`
       cursor: pointer;
       box-sizing: border-box;
       text-rendering: optimizelegibility;
-      font-feature-settings: 'liga' !important;
+      font-feature-settings: "liga" !important;
       font-size: 84px !important;
       font-weight: normal;
       font-style: normal;
       line-height: 1;
       letter-spacing: normal;
       text-transform: none;
-      display: inline-block;
+      display: none;
       white-space: nowrap;
       word-wrap: normal;
       direction: ltr;
-      -webkit-font-smoothing: antialiased;
+
       color: rgb(204, 204, 204);
     } //input 수정해야함.
   }
@@ -48,6 +50,39 @@ const Container = styled(CreateContaier)`
 
 const UploadImg = () => {
   const dispatch = useDispatch();
+
+  const nftImgInput = useRef();
+  const onImgInputBtnClick = (e) => {
+    e.preventDefault();
+    nftImgInput.current.click();
+  };
+
+  const [imageSrc, setImageSrc] = useState("");
+
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        resolve();
+      };
+    });
+  };
+
+  const encodeFileToArrayBuffer = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        dispatch(
+          incrementImgFile({ buffer: reader.result, type: fileBlob.type })
+        );
+        resolve();
+      };
+    });
+  };
+
   return (
     <Container>
       <h3>
@@ -58,13 +93,18 @@ const UploadImg = () => {
         GLTF. Max size: 100 MB
       </p>
       <div>
-        <FaRegImage size={50} color="#aaa2a2">
-          <input
-            type="file"
-            onChange={(e) => dispatch(incrementImgFile(e.target.value))} //수정해야함.
-          />
-        </FaRegImage>
+        {imageSrc && <img src={imageSrc} alt="" />}
+        <input
+          type="file"
+          ref={nftImgInput}
+          accept="image/*"
+          onChange={(e) => {
+            encodeFileToBase64(e.target.files[0]);
+            encodeFileToArrayBuffer(e.target.files[0]);
+          }}
+        />
       </div>
+      <Button onClick={onImgInputBtnClick}>이미지 업로드</Button>
     </Container>
   );
 };

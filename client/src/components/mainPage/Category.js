@@ -1,42 +1,9 @@
-import styled from 'styled-components';
-
-const categoryData = [
-  { link: 'https://opensea.io/static/images/categories/art.png', title: 'Art' },
-  {
-    link: 'https://opensea.io/static/images/categories/collectibles.png',
-    title: 'Collectibles',
-  },
-  {
-    link: 'https://opensea.io/static/images/categories/domain-names.png',
-    title: 'Domain Names',
-  },
-  {
-    link: 'https://opensea.io/static/images/categories/music.png',
-    title: 'Music',
-  },
-  {
-    link: 'https://opensea.io/static/images/categories/photography-category.png',
-    title: 'Photograpy',
-  },
-  {
-    link: 'https://opensea.io/static/images/categories/sports.png',
-    title: 'Sports',
-  },
-  {
-    link: 'https://opensea.io/static/images/categories/trading-cards.png',
-    title: 'Tradding-Cards',
-  },
-  {
-    link: 'https://opensea.io/static/images/categories/utility.png',
-    title: 'Utility',
-  },
-  {
-    link: 'https://opensea.io/static/images/categories/virtual-worlds.png',
-    title: 'Virtual Worlds',
-  },
-];
+import styled from "styled-components";
+import categoryData from "../../data/categoryData";
 
 const Container = styled.section`
+  width: 1500px;
+  margin: 0 auto;
   height: 1000px;
 
   display: flex;
@@ -63,11 +30,11 @@ const Container = styled.section`
 
 const ItemContainer = styled.div`
   width: 1000px;
-  height: 900px;
-
+  height: 950px;
   display: flex;
   justify-content: space-around;
-  /* align-items: flex-start; */
+
+  align-items: flex-start;
   flex-wrap: wrap;
   /* border: 1px solid red; */
   @media screen and (max-width: 1000px) {
@@ -100,7 +67,7 @@ const Item = styled.div`
   }
   p {
     width: 300px;
-    height: 20px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -112,18 +79,18 @@ const Item = styled.div`
 const Category = () => {
   const newPage = (categoryName) => {
     let name = categoryName;
-    if (categoryName === 'Domain Names') {
-      name = 'domain-names';
+    if (categoryName === "Domain Names") {
+      name = "domain-names";
     }
-    if (categoryName === 'Virtual Worlds') {
-      name = 'virtual-worlds';
+    if (categoryName === "Virtual Worlds") {
+      name = "virtual-worlds";
     }
-    if (categoryName === 'Photograpy') {
-      name = 'photography-category';
+    if (categoryName === "Photograpy") {
+      name = "photography-category";
     }
 
-    const url = 'https://opensea.io/collection/' + name.toLowerCase();
-    window.open(url, '_blank');
+    const url = "https://opensea.io/collection/" + name.toLowerCase();
+    window.open(url, "_blank");
   };
 
   return (
