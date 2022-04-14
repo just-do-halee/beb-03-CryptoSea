@@ -85,19 +85,19 @@ module.exports = class {
 
     let removed = `0x${inputData.substr(10)}`;
 
-    try {
-      const result = this.eth.abi.decodeParameters(
-        [
-          { type: "address", name: "recipient" },
-          { type: "string", name: "tokenURI" },
-        ],
-        removed
-      );
-    } catch (err) {
-      console.log(err);
-    }
+    const result = this.eth.abi.decodeParameters(
+      [
+        { type: "address", name: "recipient" },
+        { type: "string", name: "tokenURI" },
+      ],
+      removed
+    );
 
     tx.input = result;
     return tx;
+  }
+
+  getLatestBlockNumber() {
+    return this.eth.getBlockNumber();
   }
 };
