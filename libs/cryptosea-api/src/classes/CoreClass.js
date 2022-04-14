@@ -4,7 +4,7 @@ const erc721Abi = require("../erc721Abi");
 module.exports = class {
   constructor(
     provider,
-    cryptoseaContAddr = "0x84b7247e5B2fca3AFbffb541199A967fcff13c9a"
+    cryptoseaContAddr = "0x5b22ce9345F6D67b83D34108f790dB9cc20eD9Ea"
   ) {
     this.provider = provider;
     this.web3 = new Web3(provider);
@@ -38,23 +38,9 @@ module.exports = class {
 
   //발행되어있는 토큰 모두 조회
   async getTotalSupply() {
-    const name = await this.methods.name().call();
-    const symbol = await this.methods.symbol().call();
     const totalSupply = await this.methods.totalSupply().call();
-    let arr = [];
-    for (let i = 1; i <= totalSupply; i++) {
-      arr.push(i);
-    }
 
-    for (let tokenId of arr) {
-      let tokenOwner = await tokenContract.methods.ownerOf(tokenId).call();
-      if (String(tokenOwner).toLowerCase() === account) {
-        let tokenURI = await tokenContract.methods.tokenURI(tokenId).call();
-        setErc721list((prevState) => {
-          return [...prevState, { name, symbol, tokenId, tokenURI }];
-        });
-      }
-    }
+    return totalSupply;
   }
 
   async mintNFT(tokenURI) {
