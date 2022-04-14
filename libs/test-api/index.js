@@ -20,6 +20,11 @@ async function run() {
     "e5e3e937a6aebd3bc3e1e864faba79fc475ba9a88e2ef6b2e9f69b8be3e5e79b"
   );
 
+  /* const transaction = await api.getTransaction(
+    "0x248a2329a1869703857b16176f1fb16265d4a88d2f161aa05f23e71903514ba1"
+  ); */
+
+  //console.log(transaction);
   console.log(api.account);
 
   const result = await api.mintNFT(
