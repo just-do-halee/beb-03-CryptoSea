@@ -22,6 +22,10 @@ export class EnvModule {
     AWS_BUCKET_NAME_: '',
     AWS_ACCESS_KEY_: '',
     AWS_SECRET_ACCESS_KEY_: '',
+    WEB3_PROVIDER_URL_: '',
+    WEB3_SECRET_KEY_: '',
+    WEB3_CRYPTOSEA_CONTADDR_: '',
+    WEB3_CRYPTOSEA_CONFIRMATION_: '',
     /* ********* CAN BE MODIFIED *********** */
   });
   // mode-one

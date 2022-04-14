@@ -1,12 +1,11 @@
-import {
-  Module,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EnvModule as _ } from './env/env.module';
 import { NFTModule } from './nft/nft.module';
 import { Metadata } from './nft/entities/metadata.entity';
+import { Web3Module } from './web3/web3.module';
 
 @Module({
   imports: [
@@ -28,8 +27,14 @@ import { Metadata } from './nft/entities/metadata.entity';
       // context: ({ req }) => ({ user: req['user'] }),
       driver: ApolloDriver,
     }),
+    Web3Module.forRoot({
+      provider: _.envs.WEB3_PROVIDER_URL_,
+      secretKey: _.envs.WEB3_SECRET_KEY_,
+    }),
     // JwtModule.forRoot(),
-    NFTModule,
+    NFTModule.forRoot({
+      confirmation: ~~_.envs.WEB3_CRYPTOSEA_CONFIRMATION_,
+    }),
   ],
   controllers: [],
   providers: [],

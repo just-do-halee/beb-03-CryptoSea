@@ -8,6 +8,8 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 import { Column, Entity } from 'typeorm';
 import { Ctype } from './metadata.type';
 import {
+  CEXT_MIN_LENGTH,
+  CEXT_MAX_LENGTH,
   NAME_MIN_LENGTH,
   NAME_MAX_LENGTH,
   DESCRIPTION_MIN_LENGTH,
@@ -57,6 +59,12 @@ export class Metadata extends CoreEntity {
   @IsCID()
   @Column()
   cid: string;
+
+  @Field(() => String)
+  @IsString()
+  @Length(CEXT_MIN_LENGTH, CEXT_MAX_LENGTH)
+  @Column()
+  cext: string;
 
   @Field(() => String)
   @IsString()

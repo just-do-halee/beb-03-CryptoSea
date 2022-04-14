@@ -1,29 +1,31 @@
-import { Field, ArgsType, ObjectType, OmitType } from '@nestjs/graphql';
+import {
+  Field,
+  ArgsType,
+  InputType,
+  ObjectType,
+  OmitType,
+  PartialType,
+} from '@nestjs/graphql';
 import { ResField } from 'src/common/decorators/result.decorator';
 import { BaseOutput } from 'src/common/dtos/output.dto';
 import { Metadata } from '../entities/metadata.entity';
 import { OmitCore } from 'src/common/functions/core.function';
-import { IsHash, IsUrl, IsBase32, IsLowercase } from 'class-validator';
-import { IsCID } from 'src/common/decorators/validator.decorator';
-
-// for test
-// @InputType()
-// export class NFTInput extends OmitType(OmitCore(Metadata), ['txhash'], InputType) {}
+import { IsHash, IsUrl } from 'class-validator';
 
 @ArgsType()
-export class NFTInput {
-  // @Field(() => String)
-  // @IsHash('sha256')
-  // txAddr: string;
+export class CacheNFTInput {
   @Field(() => String)
-  @IsCID()
-  tokenURI: string;
+  @IsHash('sha256')
+  txhash: string;
 }
+
+@InputType()
+export class NFTInput extends PartialType(OmitCore(Metadata)) {}
 
 @ObjectType()
 export class OutputMetadata extends OmitType(
   OmitCore(Metadata),
-  ['txhash', 'ctype', 'cid'],
+  ['txhash', 'ctype', 'cid', 'cext'],
   ObjectType,
 ) {
   @Field(() => String)
@@ -35,4 +37,10 @@ export class OutputMetadata extends OmitType(
 export class NFTOutput extends BaseOutput<OutputMetadata> {
   @ResField(() => OutputMetadata)
   ok?: OutputMetadata;
+}
+
+@ObjectType()
+export class NFTsOutput extends BaseOutput<OutputMetadata[]> {
+  @ResField(() => [OutputMetadata])
+  ok?: OutputMetadata[];
 }

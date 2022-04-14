@@ -1,6 +1,9 @@
 import { isByteLength } from 'class-validator';
 import { MetaAttribute } from './metadata.type';
 
+export const CEXT_MIN_LENGTH = 1;
+export const CEXT_MAX_LENGTH = 10;
+
 export const NAME_MIN_LENGTH = 1;
 export const NAME_MAX_LENGTH = 10000;
 export const DESCRIPTION_MIN_LENGTH = 1;
