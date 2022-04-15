@@ -1,22 +1,25 @@
-const Utils = require('../functions/utils');
-
-const Web3 = require('web3');
-const erc721Abi = require('../erc721Abi');
+const Utils = require("../functions/utils");
+const ethers = require("ethers");
+const Web3 = require("web3");
+const erc721Abi = require("../erc721Abi");
+const erc721MarketAbi = require("../erc721MarketAbi");
+const gas = 2000000;
 
 module.exports = class {
   constructor(
     provider,
-
-    cryptoseaContAddr = "0xe69E98dB440D890E6eB63CdC4aa34d8eacCB66aE"
-
-  
-
+    cryptoseaContAddr = "0xe69E98dB440D890E6eB63CdC4aa34d8eacCB66aE",
+    cryptoseaMarketContAddr = "0xeD31479352176C41F1284fc9F1C39DAE9211BAA8"
   ) {
     this.utils = Web3.utils;
     this.provider = provider;
     this.web3 = new Web3(provider);
     this.eth = this.web3.eth;
     this.methods = new this.eth.Contract(erc721Abi, cryptoseaContAddr).methods;
+    this.marketMethods = new this.eth.Contract(
+      erc721MarketAbi,
+      cryptoseaMarketContAddr
+    ).methods;
   }
 
   async connectWallet(localPrivKey) {
@@ -64,6 +67,8 @@ module.exports = class {
       from: this.account,
     });
 
+    this.methods.setApproveForAll(cryptoseaMarketContAddr, "1").call(); //해당 마켓에서 거래 가능하도록 승인
+
     return result;
   }
 
@@ -95,7 +100,7 @@ module.exports = class {
 
     const { input } = tx;
 
-    if (typeof input !== 'string' || input === '0x' || input === '') {
+    if (typeof input !== "string" || input === "0x" || input === "") {
       tx.input = {};
       return tx;
     }
@@ -104,8 +109,8 @@ module.exports = class {
 
     const result = this.eth.abi.decodeParameters(
       [
-        { type: 'address', name: 'recipient' },
-        { type: 'string', name: 'tokenURI' },
+        { type: "address", name: "recipient" },
+        { type: "string", name: "tokenURI" },
       ],
       removed
     );
@@ -116,5 +121,61 @@ module.exports = class {
 
   getLatestBlockNumber() {
     return this.eth.getBlockNumber();
+  }
+
+  //NFT민트후에 마켓에 아이템 생성 (이벤트로 트랜잭션 로그에 기록 남겨주는 방식)
+  async createMarketItem(tokenId, price, listingPrice) {
+    const result = await this.marketMethods
+      .createMarketItem(cryptoseaContAddr, tokenId, price)
+      .send({ from: this.account, value: listingPrice, gas: gas });
+
+    return result;
+  }
+
+  //price 변환
+  parseUnits(price) {
+    const result = ethers.utils.parseUnits(price.toString(), "ether");
+
+    return result;
+  }
+
+  //리스팅 비용 받아오기
+  async getListingPrice() {
+    const result = await this.marketMethods.getListingPrice().call();
+    return result;
+  }
+
+  //NFT구입
+  async createMarketSale(tokenId, { value: price }) {
+    const result = await this.marketMethods
+      .createMarketSale(cryptoseaContAddr, tokenId, { value: price })
+      .send();
+
+    return result;
+  }
+
+  decode(value, kind) {
+    switch (kind) {
+      case "tokenURI":
+        return this.eth.abi.decodeParameters(
+          [
+            { type: "address", name: "recipient" },
+            { type: "string", name: "tokenURI" },
+          ],
+          value
+        );
+      case "price":
+        return this.eth.abi.decodeParameters(
+          [
+            { type: "address", name: "seller" },
+            { type: "address", name: "owner" },
+            { type: "uint256", name: "price" },
+            { type: "bool", name: "sold" },
+          ],
+          value
+        );
+      default:
+        throw new Error(`decoding error: unexpected kind`);
+    }
   }
 };

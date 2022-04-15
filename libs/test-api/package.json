@@ -11,6 +11,7 @@
   "author": "just-do-halee",
   "license": "ISC",
   "dependencies": {
-    "cryptosea-api": "file:../cryptosea-api"
+    "cryptosea-api": "file:../cryptosea-api",
+    "ethers": "^5.6.4"
   }
 }
