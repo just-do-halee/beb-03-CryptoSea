@@ -6,7 +6,11 @@ const erc721Abi = require('../erc721Abi');
 module.exports = class {
   constructor(
     provider,
-    cryptoseaContAddr = '0xc92ACbE91cB81719db4752e93a732c05a32bFfD6'
+
+    cryptoseaContAddr = "0xe69E98dB440D890E6eB63CdC4aa34d8eacCB66aE"
+
+  
+
   ) {
     this.utils = Web3.utils;
     this.provider = provider;
@@ -41,17 +45,23 @@ module.exports = class {
     return result;
   }
 
-  //발행되어있는 토큰 모두 조회
+  //발행되어있는 토큰 모두 조회 return = number
   async getTotalSupply() {
     const totalSupply = await this.methods.totalSupply().call();
 
     return totalSupply;
   }
 
+  //특정인 소유의 nft tokenId 조회
+  async listUserNFTs(address) {
+    const tokenIds = await this.methods.listUserNFTs(address).call();
+
+    return tokenIds;
+  }
+
   async mintNFT(tokenURI) {
     const result = await this.methods.mintNFT(this.account, tokenURI).send({
       from: this.account,
-      gas: 5000000,
     });
 
     return result;
