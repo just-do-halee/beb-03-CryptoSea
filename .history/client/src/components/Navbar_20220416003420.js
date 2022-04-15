@@ -79,7 +79,6 @@ const Navbar = (props) => {
 
   const onSubmit = (data) => {
     setIsSearch(true);
-    setSearchItem(data.search);
   };
 
   return (

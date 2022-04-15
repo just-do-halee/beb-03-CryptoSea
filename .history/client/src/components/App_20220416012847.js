@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
-
+import { Navigate } from "react-router-dom";
 import gql from "graphql-tag";
 import MainPage from "../routers/page/MainPage.js";
 import CreatePage from "../routers/page/CreatePage.js";
@@ -13,7 +13,7 @@ import RenderSearch from "../routers/page/RenderSearch";
 function App() {
   const [isSearch, setIsSearch] = useState(false);
   const [searchItem, setSearchItem] = useState("");
-
+  const navigate = Navigate();
   useEffect(() => {
     checkRopsten();
   }, []);
@@ -42,12 +42,13 @@ function App() {
     },
   });
   let nftArray;
-  console.log(data);
+
   if (data) {
     if (data.searchNFTs) {
-      console.log(data.searchNFTs.ok);
       nftArray = data.searchNFTs.ok;
     }
+    // setIsSearch(false);
+    nftArray = [];
   }
   return (
     <>

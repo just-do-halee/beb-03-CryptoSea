@@ -11,8 +11,7 @@ import UploadName from "../../components/create/UploadName.js";
 
 import UploadAttributes from "../../components/create/UploadAttribues.js";
 import api from "../../web3/web3.js";
-import Footbar from "../../components/common/Footbar.js";
-
+import { client } from "../../index.js";
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
 const Container = styled.section`
@@ -26,7 +25,7 @@ const Container = styled.section`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-
+  /* border: 1px solid black; */
   h1 {
     margin-bottom: 16px;
     font-weight: 800;
@@ -73,14 +72,13 @@ const CreatePage = () => {
     }
   };
   useEffect(() => {
-    connectwallet()
-      .then(setAccount)
-      .catch((err) => console.log(err));
+    connectwallet().then(setAccount);
   }, []);
 
+  // console.log(account);
   const nftData = useSelector((state) => state.createNFT);
 
-  //ipfs -> 이미지 전송
+  console.log(`nftData : ${nftData}`);
   const ipfsTransferImage = async () => {
     const { image } = nftData;
 
@@ -97,7 +95,6 @@ const CreatePage = () => {
     }
   };
 
-  // ipfs-> 메타데이터 전송
   const ipfsTransferMetaData = async (cid) => {
     const { name, description, attributes, image } = nftData;
     let { type } = image;
@@ -124,9 +121,6 @@ const CreatePage = () => {
       console.log(err);
     }
   };
-
-  // blockchain -> nft 발행
-  // Server -> 트랜잭션 발행
   const [getData, { loading, error, data }] = useMutation(Hash_Query);
   const sendTransaction = async (metaCid) => {
     try {
@@ -151,22 +145,20 @@ const CreatePage = () => {
   };
 
   return (
-    <>
-      <Container>
-        <h1>Create New Item</h1>
-        <p>
-          <span>*</span> Required fields
-        </p>
-        <UploadImg />
-        <UploadName />
-        <UploadDescription />
-        <UploadAttributes />
-        <CreateButton variant="contained" onClick={ipfsTransferImage}>
-          Create
-        </CreateButton>
-      </Container>
-      <Footbar />
-    </>
+    <Container>
+      <h1>Create New Item</h1>
+      <p>
+        <span>*</span> Required fields
+      </p>
+      <UploadImg />
+      <UploadName />
+      {/* <UploadLink /> */}
+      <UploadDescription />
+      <UploadAttributes />
+      <CreateButton variant="contained" onClick={ipfsTransferImage}>
+        Create
+      </CreateButton>
+    </Container>
   );
 };
 

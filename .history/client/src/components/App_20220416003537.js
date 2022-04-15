@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
-
 import gql from "graphql-tag";
 import MainPage from "../routers/page/MainPage.js";
 import CreatePage from "../routers/page/CreatePage.js";
@@ -11,9 +10,6 @@ import checkRopsten from "../Controller/checkRopsten";
 import RenderSearch from "../routers/page/RenderSearch";
 
 function App() {
-  const [isSearch, setIsSearch] = useState(false);
-  const [searchItem, setSearchItem] = useState("");
-
   useEffect(() => {
     checkRopsten();
   }, []);
@@ -22,9 +18,9 @@ function App() {
     search();
   }, [searchItem]);
 
-  const searchNFT = gql`
-    query searchNFTs($keyword: String!) {
-      searchNFTs(keyword: $keyword) {
+  const getNFT = gql`
+    query getNFTs($where: [PartialNFTInput!]!) {
+      getNFTs(where: $where) {
         ok {
           tid
           name
@@ -36,29 +32,26 @@ function App() {
     }
   `;
 
-  const [search, { loading, data }] = useLazyQuery(searchNFT, {
+  const [search, { called, loading, data }] = useLazyQuery(getNFT, {
     variables: {
-      keyword: searchItem,
+      where: [
+        { name: searchItem },
+        { description: searchItem },
+        { attributes: [{ akey: searchItem }] },
+        { attributes: [{ avalue: searchItem }] },
+      ],
     },
   });
-  let nftArray;
-  console.log(data);
-  if (data) {
-    if (data.searchNFTs) {
-      console.log(data.searchNFTs.ok);
-      nftArray = data.searchNFTs.ok;
-    }
-  }
+
+  const [isSearch, setIsSearch] = useState(false);
+  const [searchItem, setSearchItem] = useState("");
+
   return (
     <>
       <Navbar setIsSearch={setIsSearch} setSearchItem={setSearchItem} />
       {/* isSearch 가 true 어떤 컴포넌트를 랜더링해줘야함. */}
       {isSearch ? (
-        loading ? (
-          <div>loading...</div>
-        ) : (
-          <RenderSearch data={nftArray} />
-        )
+        <RenderSearch data={data} />
       ) : (
         <Routes>
           <Route path="/" element={<MainPage />} />

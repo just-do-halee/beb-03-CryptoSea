@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
-
 import gql from "graphql-tag";
 import MainPage from "../routers/page/MainPage.js";
 import CreatePage from "../routers/page/CreatePage.js";
@@ -22,8 +21,8 @@ function App() {
     search();
   }, [searchItem]);
 
-  const searchNFT = gql`
-    query searchNFTs($keyword: String!) {
+  const getNFT = gql`
+    query getNFTs($keyword: String!) {
       searchNFTs(keyword: $keyword) {
         ok {
           tid
@@ -36,29 +35,20 @@ function App() {
     }
   `;
 
-  const [search, { loading, data }] = useLazyQuery(searchNFT, {
+  const [search, { called, loading, data }] = useLazyQuery(getNFT, {
     variables: {
       keyword: searchItem,
     },
   });
-  let nftArray;
-  console.log(data);
-  if (data) {
-    if (data.searchNFTs) {
-      console.log(data.searchNFTs.ok);
-      nftArray = data.searchNFTs.ok;
-    }
-  }
+
+  console.log(called, loading, data);
+
   return (
     <>
       <Navbar setIsSearch={setIsSearch} setSearchItem={setSearchItem} />
       {/* isSearch 가 true 어떤 컴포넌트를 랜더링해줘야함. */}
       {isSearch ? (
-        loading ? (
-          <div>loading...</div>
-        ) : (
-          <RenderSearch data={nftArray} />
-        )
+        <RenderSearch data={data} />
       ) : (
         <Routes>
           <Route path="/" element={<MainPage />} />

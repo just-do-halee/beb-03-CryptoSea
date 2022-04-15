@@ -11,7 +11,6 @@ import UploadName from "../../components/create/UploadName.js";
 
 import UploadAttributes from "../../components/create/UploadAttribues.js";
 import api from "../../web3/web3.js";
-import Footbar from "../../components/common/Footbar.js";
 
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
@@ -26,7 +25,7 @@ const Container = styled.section`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-
+  /* border: 1px solid black; */
   h1 {
     margin-bottom: 16px;
     font-weight: 800;
@@ -73,12 +72,13 @@ const CreatePage = () => {
     }
   };
   useEffect(() => {
-    connectwallet()
-      .then(setAccount)
-      .catch((err) => console.log(err));
+    connectwallet().then(setAccount);
   }, []);
 
+  // console.log(account);
   const nftData = useSelector((state) => state.createNFT);
+
+  console.log(`nftData : ${nftData}`);
 
   //ipfs -> 이미지 전송
   const ipfsTransferImage = async () => {
@@ -151,22 +151,19 @@ const CreatePage = () => {
   };
 
   return (
-    <>
-      <Container>
-        <h1>Create New Item</h1>
-        <p>
-          <span>*</span> Required fields
-        </p>
-        <UploadImg />
-        <UploadName />
-        <UploadDescription />
-        <UploadAttributes />
-        <CreateButton variant="contained" onClick={ipfsTransferImage}>
-          Create
-        </CreateButton>
-      </Container>
-      <Footbar />
-    </>
+    <Container>
+      <h1>Create New Item</h1>
+      <p>
+        <span>*</span> Required fields
+      </p>
+      <UploadImg />
+      <UploadName />
+      <UploadDescription />
+      <UploadAttributes />
+      <CreateButton variant="contained" onClick={ipfsTransferImage}>
+        Create
+      </CreateButton>
+    </Container>
   );
 };
 

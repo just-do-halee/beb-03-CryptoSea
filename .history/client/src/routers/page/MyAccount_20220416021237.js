@@ -5,12 +5,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "graphql-tag";
-import NFT from "../../components/common/NFT.js";
-import FlexContainer from "../../components/common/FlexContainer";
+
 import CreateContaier from "../../components/common/CreateContainer";
 import api from "../../web3/web3";
 import NFTContainer from "../../components/common/NFTContainer";
-import Footbar from "../../components/common/Footbar.js";
 
 const MyAccountContainer = styled(CreateContaier)`
   width: 100%;
@@ -74,7 +72,7 @@ const MyAccount = () => {
   const accounts = useSelector((state) => state.accounts.accounts);
   const [tokenID, setTokenID] = useState();
   const navigate = useNavigate();
-
+  const edit = true;
   useEffect(() => {
     if (accounts === "") {
       navigate("/");
@@ -120,29 +118,26 @@ const MyAccount = () => {
       {loading ? (
         <div>loading....</div>
       ) : (
-        <>
-          <MyAccountContainer>
-            <div className="top-background">
-              <Avatar className="avatar" sx={{ bgcolor: "#caf1fa" }}>
-                L
-              </Avatar>
+        <MyAccountContainer>
+          <div className="top-background">
+            <Avatar className="avatar" sx={{ bgcolor: "#caf1fa" }}>
+              L
+            </Avatar>
+          </div>
+          <div className="bottom-background">
+            <h3>username</h3>
+            <div className="accounts">
+              <img
+                src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"
+                alt=""
+              />
+              <div>{accounts}</div>
             </div>
-            <div className="bottom-background">
-              <h3>username</h3>
-              <div className="accounts">
-                <img
-                  src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"
-                  alt=""
-                />
-                <div>{accounts}</div>
-              </div>
-            </div>
-            {/* useEffect 로 계정에 있는 데이터들 받아와서 <NFT랜더링>해야함 */}
+          </div>
+          {/* useEffect 로 계정에 있는 데이터들 받아와서 <NFT랜더링>해야함 */}
 
-            <NFTContainer data={nftArray} />
-          </MyAccountContainer>
-          <Footbar />
-        </>
+          <NFTContainer data={nftArray} edit={edit} />
+        </MyAccountContainer>
       )}
     </>
   );

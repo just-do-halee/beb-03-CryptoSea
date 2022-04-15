@@ -49,7 +49,6 @@ const NavbarContainer = styled.nav`
     cursor: pointer;
   }
 `;
-
 const SearchInput = styled(StyledInput)`
   width: 500px;
 `;
@@ -63,11 +62,25 @@ const Logo = styled.img.attrs({
 
 //NavBar 반응형 구현!!!!!
 
-const Navbar = (props) => {
-  const { setIsSearch, setSearchItem } = props;
+const getNFT = gql`
+  query getNFTs($where: [PartialNFTInput!]!) {
+    getNFTs(where: $where) {
+      ok {
+        tid
+        name
+        description
+        url
+      }
+      error
+    }
+  }
+`;
+
+const Navbar = () => {
   const dispatch = useDispatch();
   const [accounts, setAccounts] = useState("");
   const { register, handleSubmit } = useForm();
+  const [searchItem, setSearchItem] = useState({ keyword: "" });
 
   useEffect(() => {
     if (accounts === "") {
@@ -77,11 +90,27 @@ const Navbar = (props) => {
     }
   }, [accounts]);
 
-  const onSubmit = (data) => {
-    setIsSearch(true);
-    setSearchItem(data.search);
-  };
+  useEffect(() => {
+    search();
+  }, [searchItem]);
 
+  const onSubmit = (data) => {
+    setSearchItem({ keyword: data.search });
+  };
+  const [search, { called, loading, data }] = useLazyQuery(getNFT, {
+    variables: {
+      where: [
+        { name: "우솝" },
+        { description: "우솝" },
+        { attributes: [{ akey: "우솝" }] },
+        { attributes: [{ avalue: "우솝" }] },
+      ],
+    },
+  });
+
+  //{search:inputValue}
+  console.log(searchItem.keyword);
+  console.log(called, loading, data);
   return (
     <NavbarContainer>
       <Link to="/">
