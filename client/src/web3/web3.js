@@ -1,5 +1,5 @@
-import Web3 from "web3";
+import * as CAPI from "cryptosea-api";
 
-const web3 = new Web3(window.ethereum);
+const api = CAPI.new(window.ethereum);
 
-export default web3;
+export default api;

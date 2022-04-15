@@ -3,15 +3,15 @@ import { useSelector } from "react-redux";
 import { create } from "ipfs-http-client";
 import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
+import { gql, useMutation } from "@apollo/client";
+
 import UploadDescription from "../../components/create/UploadDescription.js";
 import UploadImg from "../../components/create/UploadImg.js";
 import UploadName from "../../components/create/UploadName.js";
 
 import UploadAttributes from "../../components/create/UploadAttribues.js";
-
-import getAccount from "../../Controller/getAccount.js";
-import web3 from "../../web3/web3.js";
-import { erc721Abi } from "../../web3/abi.js";
+import api from "../../web3/web3.js";
+import { client } from "../../index.js";
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
 const Container = styled.section`
@@ -48,12 +48,35 @@ const CreateButton = styled(Button)`
   height: 50px;
   border-radius: 20px;
 `;
+const Hash_Query = gql`
+  mutation CreatePage($hash: String!) {
+    cacheNFT(txhash: $hash) {
+      ok {
+        url
+      }
+      error
+    }
+  }
+`;
 
 const CreatePage = () => {
   const [account, setAccount] = useState();
+
+  const connectwallet = async () => {
+    try {
+      const wallet = await api.connectWallet();
+      return wallet.account;
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
-    getAccount(setAccount);
+    connectwallet().then(setAccount);
   }, []);
+
+  const [getData, { loading, error, data }] = useMutation(Hash_Query);
+
+  // console.log(account);
   const nftData = useSelector((state) => state.createNFT);
 
   console.log(`nftData : ${nftData}`);
@@ -65,7 +88,7 @@ const CreatePage = () => {
       const created = await client.add(image.buffer);
       // console.log(created);
       const cid = created.cid._baseCache.get("z");
-      // console.log(cid);
+      console.log(`imagecid`);
       await ipfsTransferMetaData(cid);
       console.log("ipfs 이미지전송 성공");
     } catch (error) {
@@ -101,19 +124,22 @@ const CreatePage = () => {
   };
 
   const sendTransaction = async (metaCid) => {
-    const CA = "0xc92ACbE91cB81719db4752e93a732c05a32bFfD6";
-    const nftContract = await new web3.eth.Contract(erc721Abi, CA);
-
     try {
-      const params = {
-        from: account,
-        to: CA,
-        value: 0,
-        data: nftContract.methods.mintNFT(metaCid),
-      };
-      const hash = await web3.eth.sendTransaction(params);
-
-      console.log(hash);
+      const result = await api.mintNFT(metaCid);
+      window.alert("민팅 중입니다! 잠시만 기다려주세요!");
+      const hash = result.transactionHash.slice(2);
+      console.log(`transactionHash = ${hash}`);
+      const response = await getData({
+        variables: {
+          hash,
+        },
+      });
+      console.log(response);
+      if (response.data.cacheNFT.ok.url !== "") {
+        window.alert("NFT 발행완료");
+      } else {
+        window.alert("민팅에 실패했습니다.");
+      }
     } catch (err) {
       console.log(err);
     }
