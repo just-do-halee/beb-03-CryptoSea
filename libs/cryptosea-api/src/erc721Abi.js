@@ -182,6 +182,25 @@ const erc721Abi = [
     inputs: [
       {
         internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "listUserNFTs",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "recipient",
         type: "address",
       },
@@ -467,4 +486,5 @@ const erc721Abi = [
     type: "function",
   },
 ];
+
 module.exports = erc721Abi;
