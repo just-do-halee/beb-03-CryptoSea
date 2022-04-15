@@ -25,8 +25,8 @@ const ImageBox = styled.div`
   overflow: hidden;
   position: relative;
   border-radius: 15px;
-  height: 100%;
-  width: 286px;
+  height: 300px;
+  width: 300px;
 
   img {
     font-family: Poppins, sans-serif;
@@ -38,11 +38,7 @@ const ImageBox = styled.div`
     box-sizing: border-box;
     transition: opacity 400ms ease 0s;
     opacity: 1;
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
+
     border-radius: 0px;
   }
 `;
@@ -89,7 +85,6 @@ const ContentBox = styled.div`
     }
     img {
       font-family: Poppins, sans-serif;
-
       writing-mode: horizontal-tb;
       pointer-events: initial;
       color: rgb(53, 56, 64);
@@ -99,7 +94,6 @@ const ContentBox = styled.div`
       box-sizing: border-box;
       width: 20px;
       height: 20px;
-      object-fit: contain;
     }
     span {
       font-size: 1.1rem;
@@ -152,10 +146,7 @@ const NFT = (props) => {
   return (
     <NFTContainer>
       <ImageBox>
-        <img
-          src="https://lh3.googleusercontent.com/I4YqObqgGFN-vZSIMqDuc4em9KbcZogivbjuXg9XE2BpBWzwBiPWYJLl3AtMQQkEU8I-t1iM6XyI61RwWDHrr1y1UqRE5Hu_XZ7Ytg=w286"
-          alt=""
-        />
+        <img src={image} alt="이미지" />
         {/* src = image로 교체해야함. */}
       </ImageBox>
       <ContentBox>

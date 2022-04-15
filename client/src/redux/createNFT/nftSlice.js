@@ -10,17 +10,17 @@ export const nftSlice = createSlice({
   },
   reducers: {
     incrementName: (state, action) => {
-      state.name = action.payload;
+      state.name = action.payload.trim();
     },
     incrementImgFile: (state, action) => {
       // console.log(action.payload);
-      state.image = action.payload;
+      state.image = action.payload.trim();
     },
     incrementLink: (state, action) => {
-      state.link = action.payload;
+      state.link = action.payload.trim();
     },
     incrementDescription: (state, action) => {
-      state.description = action.payload;
+      state.description = action.payload.trim();
     },
     incrementAttributes: (state, action) => {
       // console.log(action);
