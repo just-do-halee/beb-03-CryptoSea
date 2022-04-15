@@ -1,5 +1,10 @@
 import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
-import { NFTInput, CacheNFTInput, NFTOutput, NFTsOutput } from './dtos/nft.dto';
+import {
+  GetNFTsInput,
+  CacheNFTInput,
+  NFTOutput,
+  NFTsOutput,
+} from './dtos/nft.dto';
 import { NFTService } from './nft.service';
 
 @Resolver()
@@ -12,7 +17,7 @@ export class NFTResolver {
   }
 
   @Query(() => NFTsOutput)
-  getNFTs(@Args('input') nftInput: NFTInput): Promise<NFTsOutput> {
-    return this.nftService.getNFTs(nftInput);
+  getNFTs(@Args('input') getNFTsInput: GetNFTsInput): Promise<NFTsOutput> {
+    return this.nftService.getNFTs(getNFTsInput);
   }
 }

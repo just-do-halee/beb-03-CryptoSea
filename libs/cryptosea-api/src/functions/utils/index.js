@@ -1,3 +1,3 @@
 module.exports = {
-  attach0x: require("./attach0x"),
+  attach0x: require('./attach0x'),
 };
