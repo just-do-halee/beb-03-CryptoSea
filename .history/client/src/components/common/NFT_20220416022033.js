@@ -124,9 +124,6 @@ const FooterBox = styled.footer`
       opacity: 0.5;
     }
   }
-  .description {
-    color: #999;
-  }
 `;
 
 const style = {
@@ -196,7 +193,7 @@ const NFT = (props) => {
             </Modal>
           </>
         ) : (
-          <div className="description">{description}</div>
+          <div>{description}</div>
         )}
       </FooterBox>
     </NFTContainer>

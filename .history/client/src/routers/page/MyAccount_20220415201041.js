@@ -9,8 +9,6 @@ import NFT from "../../components/common/NFT.js";
 import FlexContainer from "../../components/common/FlexContainer";
 import CreateContaier from "../../components/common/CreateContainer";
 import api from "../../web3/web3";
-import NFTContainer from "../../components/common/NFTContainer";
-import Footbar from "../../components/common/Footbar.js";
 
 const MyAccountContainer = styled(CreateContaier)`
   width: 100%;
@@ -55,7 +53,13 @@ const MyAccountContainer = styled(CreateContaier)`
     }
   }
 `;
-
+const NFTContainer = styled(FlexContainer)`
+  width: 1300px;
+  margin: 0 auto;
+  margin-top: 50px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+`;
 const getNFT = async (account) => {
   try {
     let nftList = await api.listUserNFTs(account);
@@ -74,7 +78,6 @@ const MyAccount = () => {
   const accounts = useSelector((state) => state.accounts.accounts);
   const [tokenID, setTokenID] = useState();
   const navigate = useNavigate();
-
   useEffect(() => {
     if (accounts === "") {
       navigate("/");
@@ -114,35 +117,45 @@ const MyAccount = () => {
   if (error) {
     navigate("/");
   }
+  console.log(`error:${error}`);
+  console.log(`data:${data}`);
+  console.log(`loading:${loading}`);
 
   return (
     <>
       {loading ? (
         <div>loading....</div>
       ) : (
-        <>
-          <MyAccountContainer>
-            <div className="top-background">
-              <Avatar className="avatar" sx={{ bgcolor: "#caf1fa" }}>
-                L
-              </Avatar>
+        <MyAccountContainer>
+          <div className="top-background">
+            <Avatar className="avatar" sx={{ bgcolor: "#caf1fa" }}>
+              L
+            </Avatar>
+          </div>
+          <div className="bottom-background">
+            <h3>username</h3>
+            <div className="accounts">
+              <img
+                src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"
+                alt=""
+              />
+              <div>{accounts}</div>
             </div>
-            <div className="bottom-background">
-              <h3>username</h3>
-              <div className="accounts">
-                <img
-                  src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"
-                  alt=""
-                />
-                <div>{accounts}</div>
-              </div>
-            </div>
-            {/* useEffect 로 계정에 있는 데이터들 받아와서 <NFT랜더링>해야함 */}
+          </div>
+          {/* useEffect 로 계정에 있는 데이터들 받아와서 <NFT랜더링>해야함 */}
 
-            <NFTContainer data={nftArray} />
-          </MyAccountContainer>
-          <Footbar />
-        </>
+          <NFTContainer>
+            {nftArray.map((data, index) => {
+              const { name, description, url } = data;
+
+              return (
+                <div key={index}>
+                  <NFT name={name} image={url} price={"1.0"}></NFT>
+                </div>
+              );
+            })}
+          </NFTContainer>
+        </MyAccountContainer>
       )}
     </>
   );

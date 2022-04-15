@@ -42,12 +42,13 @@ function App() {
     },
   });
   let nftArray;
-  console.log(data);
+  console.log(data.searchNFTs.ok);
   if (data) {
     if (data.searchNFTs) {
-      console.log(data.searchNFTs.ok);
       nftArray = data.searchNFTs.ok;
     }
+    // setIsSearch(false);
+    nftArray = [];
   }
   return (
     <>

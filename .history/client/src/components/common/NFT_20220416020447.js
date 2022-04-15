@@ -124,9 +124,6 @@ const FooterBox = styled.footer`
       opacity: 0.5;
     }
   }
-  .description {
-    color: #999;
-  }
 `;
 
 const style = {
@@ -145,18 +142,19 @@ const NFT = (props) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { image, name, description, price, buy, edit } = props;
+  const { image, name, price, buy, edit } = props;
   const changePrice = () => {
-    // 가격정보 변경
+    price = window.prompt("바꿀 가격을 입력해주세요.");
   };
   return (
     <NFTContainer>
       <ImageBox>
         <img src={image} alt="이미지" />
+        {/* src = image로 교체해야함. */}
       </ImageBox>
       <ContentBox>
         <div className="name">{name}</div>
-
+        {/* nft - name */}
         <div className="price">
           <p>Price</p>
           <div className="price-detail">
@@ -165,11 +163,12 @@ const NFT = (props) => {
               alt=""
             />
             <span onClick={edit && changePrice}>{price}</span>
+            {/* nft 가격  */}
           </div>
         </div>
       </ContentBox>
       <FooterBox>
-        {buy ? (
+        {buy && (
           <>
             {" "}
             <div onClick={handleOpen}>Buy Now</div>
@@ -195,8 +194,6 @@ const NFT = (props) => {
               </Box>
             </Modal>
           </>
-        ) : (
-          <div className="description">{description}</div>
         )}
       </FooterBox>
     </NFTContainer>

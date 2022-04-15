@@ -45,9 +45,10 @@ function App() {
   console.log(data);
   if (data) {
     if (data.searchNFTs) {
-      console.log(data.searchNFTs.ok);
       nftArray = data.searchNFTs.ok;
     }
+    // setIsSearch(false);
+    nftArray = [];
   }
   return (
     <>

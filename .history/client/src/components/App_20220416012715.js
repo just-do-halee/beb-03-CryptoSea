@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
-
 import gql from "graphql-tag";
 import MainPage from "../routers/page/MainPage.js";
 import CreatePage from "../routers/page/CreatePage.js";
@@ -42,12 +41,13 @@ function App() {
     },
   });
   let nftArray;
-  console.log(data);
+
   if (data) {
     if (data.searchNFTs) {
-      console.log(data.searchNFTs.ok);
       nftArray = data.searchNFTs.ok;
     }
+    // setIsSearch(false);
+    nftArray = [];
   }
   return (
     <>
