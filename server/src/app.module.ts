@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EnvModule as _ } from './env/env.module';
 import { NFTModule } from './nft/nft.module';
 import { Metadata } from './nft/entities/metadata.entity';
+import { MetaAttribute } from './nft/entities/metaattribute.entity';
 import { Web3Module } from './web3/web3.module';
 
 @Module({
@@ -19,8 +20,8 @@ import { Web3Module } from './web3/web3.module';
       database: _.envs.DB_NAME_,
       synchronize: _.MODE !== 'prod',
       logging: _.MODE !== 'prod',
-      // autoLoadEntities: true,
-      entities: [Metadata],
+      autoLoadEntities: true,
+      // entities: [Metadata, MetaAttribute],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: true,

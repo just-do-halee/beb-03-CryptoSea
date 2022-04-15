@@ -6,6 +6,7 @@ import { NFTResolver } from './nft.resolver';
 import { NFTService } from './nft.service';
 import { NFTModuleOptions } from './nft.interface';
 import { CONFIG_OPTIONS } from './nft.constants';
+import { MetaAttribute } from './entities/metaattribute.entity';
 
 @Global()
 @Module({
@@ -14,7 +15,7 @@ import { CONFIG_OPTIONS } from './nft.constants';
       timeout: 10000,
       maxRedirects: 3,
     }),
-    TypeOrmModule.forFeature([Metadata]),
+    TypeOrmModule.forFeature([Metadata, MetaAttribute]),
   ],
   providers: [NFTResolver, NFTService],
   exports: [NFTService],

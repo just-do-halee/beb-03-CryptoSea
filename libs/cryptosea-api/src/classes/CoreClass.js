@@ -1,13 +1,18 @@
-const Utils = require("../functions/utils");
+const Utils = require('../functions/utils');
 
-const Web3 = require("web3");
-const erc721Abi = require("../erc721Abi");
+const Web3 = require('web3');
+const erc721Abi = require('../erc721Abi');
 
 module.exports = class {
   constructor(
     provider,
+
     cryptoseaContAddr = "0xe69E98dB440D890E6eB63CdC4aa34d8eacCB66aE"
+
+  
+
   ) {
+    this.utils = Web3.utils;
     this.provider = provider;
     this.web3 = new Web3(provider);
     this.eth = this.web3.eth;
@@ -75,17 +80,22 @@ module.exports = class {
     return result;
   }
 
+  //영수증 트랜잭션 확인
+  getTransactionReceipt(txHash) {
+    return this.eth.getTransactionReceipt(Utils.attach0x(txHash));
+  }
   //트랜잭션 확인
   async getTransaction(txHash) {
     /* txHash =
       "0xc2d6ab845405783ae61d96a598ecf9f44886538c930f46d7ac816b10a094a540"; */
 
     const tx = await this.eth.getTransaction(Utils.attach0x(txHash));
+
     if (!tx) return;
 
     const { input } = tx;
 
-    if (typeof input !== "string" || input === "0x" || input === "") {
+    if (typeof input !== 'string' || input === '0x' || input === '') {
       tx.input = {};
       return tx;
     }
@@ -94,8 +104,8 @@ module.exports = class {
 
     const result = this.eth.abi.decodeParameters(
       [
-        { type: "address", name: "recipient" },
-        { type: "string", name: "tokenURI" },
+        { type: 'address', name: 'recipient' },
+        { type: 'string', name: 'tokenURI' },
       ],
       removed
     );

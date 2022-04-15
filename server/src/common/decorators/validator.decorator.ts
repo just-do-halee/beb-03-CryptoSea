@@ -27,8 +27,7 @@ export function IsCID(
 }
 
 export function IsMetaAttributes(
-  // property?: string,
-  validationOptions?: ValidationOptions,
+  validationOptions: ValidationOptions & { partial?: boolean } = {},
 ) {
   return function (object: Object, propertyName: string) {
     registerDecorator({
@@ -42,22 +41,20 @@ export function IsMetaAttributes(
       },
       validator: {
         validate(value: any, _args: ValidationArguments) {
-          // const [relatedPropertyName] = args.constraints;
-          // const relatedValue = (args.object as any)[relatedPropertyName];
+          const { partial } = validationOptions;
+          if (partial && value === undefined) return true;
+          console.log(value);
           try {
             let arr = value;
             if (typeof arr === 'string') arr = JSON.parse(value);
-
             if (Array.isArray(arr) === false) return false;
-
             for (const obj of arr) {
               if (typeof obj !== 'object') return false;
-              if (isMetaAttribute(obj) === false) return false;
+              if (isMetaAttribute(obj, partial) === false) return false;
             }
           } catch (_) {
             return false;
           }
-
           return true;
         },
       },

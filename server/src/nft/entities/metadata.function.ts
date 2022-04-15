@@ -1,5 +1,5 @@
 import { isByteLength } from 'class-validator';
-import { MetaAttribute } from './metadata.type';
+import { MetaAttribute } from './metaattribute.entity';
 
 export const CEXT_MIN_LENGTH = 1;
 export const CEXT_MAX_LENGTH = 10;
@@ -16,21 +16,31 @@ export const AKEY_MAX_LENGTH = 2000;
 export const AVALUE_MIN_LENGTH = 1;
 export const AVALUE_MAX_LENGTH = 10000;
 
-export function isMetaAttribute(obj: object): obj is MetaAttribute {
+export function isMetaAttribute(
+  obj: object,
+  partial: boolean = false,
+): obj is MetaAttribute {
   const { atype, akey, avalue } = obj as MetaAttribute;
 
   if (
+    partial === false &&
     typeof atype !== 'string' &&
     typeof akey !== 'string' &&
     typeof avalue !== 'string'
   )
     return false;
 
-  if (isByteLength(atype, ATYPE_MIN_LENGTH, ATYPE_MAX_LENGTH) === false)
+  if (
+    atype &&
+    isByteLength(atype, ATYPE_MIN_LENGTH, ATYPE_MAX_LENGTH) === false
+  )
     return false;
-  if (isByteLength(akey, AKEY_MIN_LENGTH, AKEY_MAX_LENGTH) === false)
+  if (akey && isByteLength(akey, AKEY_MIN_LENGTH, AKEY_MAX_LENGTH) === false)
     return false;
-  if (isByteLength(avalue, AVALUE_MIN_LENGTH, AVALUE_MAX_LENGTH) === false)
+  if (
+    avalue &&
+    isByteLength(avalue, AVALUE_MIN_LENGTH, AVALUE_MAX_LENGTH) === false
+  )
     return false;
 
   return true;
