@@ -1,67 +1,45 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EnvService } from 'src/env/env.service';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Metadata } from './entities/metadata.entity';
-import { MetaAttribute } from './entities/metaattribute.entity';
 import {
   CacheNFTInput,
   GetNFTsInput,
   NFTOutput,
   NFTsOutput,
+  SearchNFTsInput,
 } from './dtos/nft.dto';
-import { CONFIG_OPTIONS, IPFS_HOST_URLS } from './nft.constants';
+import { CONFIG_OPTIONS } from './nft.constants';
 import { AsyncTryCatch } from 'src/common/decorators/trycatch.decorator';
-import { BaseResult, Result } from 'src/common/types/result.type';
+import { BaseResult } from 'src/common/types/result.type';
 import { Err, Ok, unwrap } from 'src/common/functions/result.function';
 import { setAsyncInterval } from 'src/common/functions/core.function';
 import { CID } from 'multiformats/cid';
-import { HttpService } from '@nestjs/axios';
-import { AxiosRequestConfig } from 'axios';
 import { validateOrReject } from 'class-validator';
-import * as AWS from 'aws-sdk';
-import { Web3Service } from 'src/web3/web3.service';
 import { NFTModuleOptions } from './nft.interface';
 import {
   attachExt,
   amazonS3URL,
-  extToMimeType,
 } from 'src/common/functions/file.function';
 import { Readable } from 'typeorm/platform/PlatformTools';
+import { Web3Service } from 'src/web3/web3.service';
+import { MfsService } from 'src/mfs/mfs.service';
 
 @Injectable()
 export class NFTService {
-  private readonly BUCKET_NAME: string;
-  private readonly cryptosea: any;
   constructor(
     private readonly env: EnvService,
-    private readonly httpService: HttpService,
-    private readonly web3Service: Web3Service,
+    private readonly mfs: MfsService,
+    private readonly web3: Web3Service,
     @InjectRepository(Metadata)
     private readonly metadataRepo: Repository<Metadata>,
     @Inject(CONFIG_OPTIONS)
     private readonly options: NFTModuleOptions,
-  ) {
-    AWS.config.update({
-      credentials: {
-        accessKeyId: this.env.get('AWS_ACCESS_KEY_'),
-        secretAccessKey: this.env.get('AWS_SECRET_ACCESS_KEY_'),
-      },
-    });
-    this.BUCKET_NAME = this.env.get('AWS_BUCKET_NAME_');
-    this.cryptosea = this.web3Service.cryptosea;
-  }
+  ) {}
 
   private metadataToS3URL({ cid, cext }: Metadata): string {
-    return amazonS3URL(this.BUCKET_NAME, attachExt(cid, cext));
-  }
-
-  private async getConfirmation(targetBlockNumber: number): Promise<number> {
-    const latestBlockNumber = await this.cryptosea.getLatestBlockNumber();
-    if (typeof latestBlockNumber !== 'number')
-      throw new Error(`web3 error: can not get latest block number`);
-
-    return latestBlockNumber - targetBlockNumber;
+    return amazonS3URL(this.mfs.BUCKET_NAME, attachExt(cid, cext));
   }
 
   @AsyncTryCatch()
@@ -71,7 +49,7 @@ export class NFTService {
     maxCount: number = 4,
   ): Promise<BaseResult> {
     const { confirmation } = this.options;
-    if ((await this.getConfirmation(blockNumber)) >= confirmation) {
+    if ((await this.web3.getConfirmation(blockNumber)) >= confirmation) {
       return Ok(true);
     }
 
@@ -83,7 +61,7 @@ export class NFTService {
         ms,
         maxCount,
         condition: async () =>
-          (await this.getConfirmation(blockNumber)) >= confirmation,
+          (await this.web3.getConfirmation(blockNumber)) >= confirmation,
         errorMessage: () =>
           `You need to wait until the nodes confirm your transaction more than ${confirmation}`,
       },
@@ -91,40 +69,39 @@ export class NFTService {
   }
 
   @AsyncTryCatch()
-  private async fetchFromIPFS<T>(
-    cid: CID,
-    options: AxiosRequestConfig<T> = {
-      timeout: 250000, // 2.5 min
-    },
-  ): Promise<Result<T, string>> {
-    const cidStr = cid.toString();
+  async searchNFTs({ keyword }: SearchNFTsInput): Promise<NFTsOutput> {
+    const likeKeyword = Like(`%${keyword}%`);
 
-    let errors: Error[] = [];
-    for (const rootUrl of IPFS_HOST_URLS) {
-      const _url = rootUrl + '/ipfs/' + cidStr;
-
-      let data;
-      try {
-        await this.httpService.get(_url, options).forEach((res) => {
-          data = res.data; // ---
-        });
-      } catch (e) {
-        errors.push(e);
-        continue;
-      }
-
-      if (data) {
-        return Ok(data);
-      }
-    }
-    if (errors.length > 0) return Err(JSON.stringify(errors));
-    return Err(`file not found cid from ipfs nodes`);
-  }
-
-  @AsyncTryCatch()
-  async getNFTs(getNFTInput: GetNFTsInput): Promise<NFTsOutput> {
     const nfts = await this.metadataRepo.find({
-      where: { ...getNFTInput },
+      where: [
+        {
+          name: likeKeyword,
+        },
+        {
+          description: likeKeyword,
+        },
+        {
+          attributes: [
+            {
+              atype: likeKeyword,
+            },
+          ],
+        },
+        {
+          attributes: [
+            {
+              akey: likeKeyword,
+            },
+          ],
+        },
+        {
+          attributes: [
+            {
+              avalue: likeKeyword,
+            },
+          ],
+        },
+      ],
       relations: ['attributes'],
     });
 
@@ -143,18 +120,69 @@ export class NFTService {
     return Ok(nftsOutput);
   }
 
-  @AsyncTryCatch(`couldn't get token id : `)
-  async getTokenId(txhash: string): Promise<Result<number, string>> {
-    const txInfo = await this.cryptosea.getTransactionReceipt(txhash);
-    if (typeof txInfo !== 'object') return Err(`invalid transaction hash`);
-    const tokenId = this.cryptosea.utils.hexToNumber(txInfo.logs[0].topics[3]);
-    return Ok(tokenId);
+  @AsyncTryCatch()
+  async getNFTs({ where }: GetNFTsInput): Promise<NFTsOutput> {
+    if (!where || where.length === 0) return Err(`invalid input 'where'`);
+
+    // map targets to like texts
+    let i = 0;
+    for (const { name, description, attributes } of where) {
+      if (name) where[i].name = Like(`%${name}%`) as unknown as string;
+
+      if (description)
+        where[i].description = Like(`%${description}%`) as unknown as string;
+
+      if (attributes) {
+        let j = 0;
+        for (const { atype, akey, avalue } of attributes) {
+          if (atype)
+            where[i].attributes[j].atype = Like(
+              `%${atype}%`,
+            ) as unknown as string;
+
+          if (akey)
+            where[i].attributes[j].akey = Like(
+              `%${akey}%`,
+            ) as unknown as string;
+
+          if (avalue)
+            where[i].attributes[j].avalue = Like(
+              `%${avalue}%`,
+            ) as unknown as string;
+
+          j++;
+        }
+      }
+
+      i++;
+    }
+
+    const nfts = await this.metadataRepo.find({
+      where,
+      relations: ['attributes'],
+    });
+
+    if (!nfts || nfts.length === 0) return Err(`nft not found`);
+
+    const nftsOutput = [];
+    for (const metadata of nfts) {
+      const url = this.metadataToS3URL(metadata);
+      const nftOutput = {
+        ...metadata,
+        url,
+      };
+      nftsOutput.push(nftOutput);
+    }
+
+    return Ok(nftsOutput);
   }
 
   @AsyncTryCatch()
-  async cacheNFT({ txhash }: CacheNFTInput): Promise<NFTOutput> {
+  async cacheNFT(transaction: CacheNFTInput): Promise<NFTOutput> {
     // check if there is it in our db
-    const nft = await this.metadataRepo.findOne({ where: { txhash } });
+    const nft = await this.metadataRepo.findOne({
+      where: { transaction },
+    });
     if (nft) {
       return Ok({
         tid: nft.tid,
@@ -165,10 +193,10 @@ export class NFTService {
       });
     }
 
-    const txInfo = await this.cryptosea.getTransaction(txhash);
+    const { txhash } = transaction;
+    const txInfo = await this.web3.getTransaction(txhash);
 
     if (typeof txInfo !== 'object') return Err(`invalid transaction hash`);
-    // console.log(txInfo);
 
     const { blockNumber, to, input } = txInfo;
     if (
@@ -190,16 +218,18 @@ export class NFTService {
     await this.waitConfirm(blockNumber);
 
     // fetch metadata
-    const ok_metadataObj = unwrap(await this.fetchFromIPFS(fileCid));
+    const ok_metadataObj = unwrap(await this.mfs.fetchFromIPFS(fileCid));
     if (typeof ok_metadataObj !== 'object')
       return Err(`file is not metadata structure json style`);
 
-    const tid = unwrap(await this.getTokenId(txhash)); // token id
+    const tid = unwrap(await this.web3.cryptosea.getTokenId(txhash)); // token id
 
     const metadataObj = {
       ...ok_metadataObj,
       tid,
-      txhash,
+      transaction: {
+        txhash,
+      },
     } as Metadata;
 
     const metadata = this.metadataRepo.create(metadataObj);
@@ -217,8 +247,7 @@ export class NFTService {
       // if not
       // fetch file (image or video... etc)
       const ok_file = unwrap(
-        await this.fetchFromIPFS<Readable>(CID.parse(metadata.cid), {
-          timeout: 300000,
+        await this.mfs.fetchFromIPFS<Readable>(CID.parse(metadata.cid), {
           responseType: 'stream',
         }),
       );
@@ -226,7 +255,7 @@ export class NFTService {
         return Err(`file not found cid from ipfs nodes`);
 
       // upload to S3
-      fileS3URL = await this.uploadFileToS3(
+      fileS3URL = await this.mfs.uploadFileToS3(
         attachExt(metadata.cid, metadata.cext),
         ok_file,
       );
@@ -244,22 +273,5 @@ export class NFTService {
       attributes: metadata.attributes,
       url: fileS3URL,
     });
-  }
-
-  @AsyncTryCatch()
-  private async uploadFileToS3(name: string, reader: Readable) {
-    const { BUCKET_NAME } = this; // Upload File to S3
-
-    await new AWS.S3()
-      .upload({
-        Bucket: BUCKET_NAME,
-        Body: reader,
-        ContentType: extToMimeType(name),
-        Key: name,
-        ACL: 'public-read',
-      })
-      .promise();
-
-    return amazonS3URL(BUCKET_NAME, name);
   }
 }

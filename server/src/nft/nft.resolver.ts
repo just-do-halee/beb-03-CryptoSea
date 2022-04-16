@@ -4,6 +4,7 @@ import {
   CacheNFTInput,
   NFTOutput,
   NFTsOutput,
+  SearchNFTsInput,
 } from './dtos/nft.dto';
 import { NFTService } from './nft.service';
 
@@ -17,7 +18,12 @@ export class NFTResolver {
   }
 
   @Query(() => NFTsOutput)
-  getNFTs(@Args('input') getNFTsInput: GetNFTsInput): Promise<NFTsOutput> {
+  searchNFTs(@Args() searchNFTsInput: SearchNFTsInput): Promise<NFTsOutput> {
+    return this.nftService.searchNFTs(searchNFTsInput);
+  }
+
+  @Query(() => NFTsOutput)
+  getNFTs(@Args() getNFTsInput: GetNFTsInput): Promise<NFTsOutput> {
     return this.nftService.getNFTs(getNFTsInput);
   }
 }

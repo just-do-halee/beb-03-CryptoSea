@@ -6,13 +6,22 @@ import {
   IsNumber,
   IsString,
   Length,
+  ValidateNested,
 } from 'class-validator';
 import {
   IsCID,
   IsMetaAttributes,
 } from 'src/common/decorators/validator.decorator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity, JoinTable, ManyToMany, Unique } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+  Unique,
+} from 'typeorm';
 import { Ctype } from './metadata.type';
 import {
   CEXT_MIN_LENGTH,
@@ -23,21 +32,22 @@ import {
   DESCRIPTION_MAX_LENGTH,
 } from './metadata.function';
 import { MetaAttribute } from './metaattribute.entity';
+import { Transaction } from './transaction.entity';
 
 @InputType('MetadataInput')
 @ObjectType()
 @Entity()
-@Unique(['txhash', 'tid', 'cid'])
+@Unique(['tid', 'cid'])
 export class Metadata extends CoreEntity {
-  @Field(() => String)
-  @IsLowercase()
-  @IsHash('sha256')
-  @Column()
-  txhash: string;
+  @Field(() => Transaction)
+  @ValidateNested()
+  @OneToOne(() => Transaction, { eager: true, cascade: true })
+  @JoinColumn({ name: 'transaction' })
+  transaction: Transaction;
 
   @Field(() => Number)
   @IsNumber()
-  @Column()
+  @Column({ type: 'integer' })
   tid: number;
 
   @Field(() => Ctype)

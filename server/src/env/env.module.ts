@@ -26,6 +26,10 @@ export class EnvModule {
     WEB3_SECRET_KEY_: '',
     WEB3_CRYPTOSEA_CONTADDR_: '',
     WEB3_CRYPTOSEA_CONFIRMATION_: '',
+    WEB3_CRYPTOSEA_GENESISBLOCK_: '',
+    WEB3_CRYPTOSEA_TOPIC_TOKENURI_: '',
+    IPFS_FILE_FETCHING_TIMEOUT_: '',
+    ETHERSCAN_ACCESS_KEY_: '',
     /* ********* CAN BE MODIFIED *********** */
   });
   // mode-one
