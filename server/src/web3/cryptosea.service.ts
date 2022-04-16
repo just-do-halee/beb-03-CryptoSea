@@ -40,20 +40,19 @@ export class CryptoSeaService implements EthService {
     this.eth = this.api.eth;
   }
 
-  @AsyncTryCatch(`cryptosea service : `)
   async init(): Promise<void> {
     await this.api.connectWallet(this.options.secretKey);
     await this.scrapeNFTs();
-    this.eth
-      .subscribe('logs', {
-        address: this.contractAddr,
-        topics: [this.topicAddrTokenURI],
-      })
-      .on('data', (log) => {
-        const txhash = log.transactionHash;
-        const tid = log.topics; // TODO!
-        console.log(txhash, tid);
-      });
+    // this.eth
+    //   .subscribe('logs', {
+    //     address: this.contractAddr,
+    //     topics: [this.topicAddrTokenURI],
+    //   })
+    //   .on('data', (log) => {
+    //     const txhash = log.transactionHash;
+    //     const tid = log.topics; // TODO!
+    //     console.log(txhash, tid);
+    //   });
   }
 
   @AsyncLogIt(`scrapeNFTs()`)
@@ -65,10 +64,12 @@ export class CryptoSeaService implements EthService {
       `SELECT MAX(${`tid`}) FROM ${`metadata`};`,
     );
 
-    if (!Array.isArray(result) || typeof result[0].max !== 'number')
-      return Err(`couldn't get cached total supply from database`);
+    const totalCached =
+      Array.isArray(result) && typeof result[0].max === 'number'
+        ? result[0].max
+        : 1;
 
-    const totalCached = result[0].max;
+    console.log(totalCached);
 
     if (total === totalCached) {
       console.log(`done scrapping NFTs`);
