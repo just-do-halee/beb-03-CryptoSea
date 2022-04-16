@@ -14,12 +14,22 @@ import {
   PartialMetaAttribute,
 } from '../entities/metaattribute.entity';
 import { OmitCore } from 'src/common/functions/core.function';
-import { IsHash, IsUrl } from 'class-validator';
+import {
+  IsArray,
+  IsHash,
+  IsLowercase,
+  IsString,
+  IsUrl,
+  Length,
+  ValidateNested,
+} from 'class-validator';
 import { IsMetaAttributes } from 'src/common/decorators/validator.decorator';
+import { Transaction } from '../entities/transaction.entity';
 
 @ArgsType()
 export class CacheNFTInput {
   @Field(() => String)
+  @IsLowercase()
   @IsHash('sha256')
   txhash: string;
 }
@@ -28,7 +38,7 @@ export class CacheNFTInput {
 // export class NFTInput extends PartialType(OmitCore(Metadata)) {}
 
 @InputType()
-export class GetNFTsInput extends PartialType(
+export class PartialNFTInput extends PartialType(
   OmitType(Metadata, ['attributes']),
 ) {
   @Field(() => [PartialMetaAttribute], { nullable: true })
@@ -38,10 +48,26 @@ export class GetNFTsInput extends PartialType(
   attributes?: PartialMetaAttribute[];
 }
 
+@ArgsType()
+export class GetNFTsInput {
+  @Field(() => [PartialNFTInput])
+  @IsArray()
+  @ValidateNested({ each: true })
+  where: PartialNFTInput[];
+}
+
+@ArgsType()
+export class SearchNFTsInput {
+  @Field(() => String)
+  @IsString()
+  @Length(1, 500)
+  keyword: String;
+}
+
 @ObjectType()
 export class OutputMetadata extends OmitType(
   OmitCore(Metadata),
-  ['txhash', 'ctype', 'cid', 'cext', 'attributes'],
+  ['transaction', 'ctype', 'cid', 'cext', 'attributes'],
   ObjectType,
 ) {
   @Field(() => String)

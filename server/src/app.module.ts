@@ -4,13 +4,13 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EnvModule as _ } from './env/env.module';
 import { NFTModule } from './nft/nft.module';
-import { Metadata } from './nft/entities/metadata.entity';
-import { MetaAttribute } from './nft/entities/metaattribute.entity';
 import { Web3Module } from './web3/web3.module';
+import { MfsModule } from './mfs/mfs.module';
 
 @Module({
   imports: [
     ..._.forRoot(),
+    MfsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: _.envs.DB_HOST_,
@@ -21,32 +21,23 @@ import { Web3Module } from './web3/web3.module';
       synchronize: _.MODE !== 'prod',
       logging: _.MODE !== 'prod',
       autoLoadEntities: true,
-      // entities: [Metadata, MetaAttribute],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: true,
-      // context: ({ req }) => ({ user: req['user'] }),
       driver: ApolloDriver,
+    }),
+    NFTModule.forRoot({
+      confirmation: ~~_.envs.WEB3_CRYPTOSEA_CONFIRMATION_,
     }),
     Web3Module.forRoot({
       provider: _.envs.WEB3_PROVIDER_URL_,
       secretKey: _.envs.WEB3_SECRET_KEY_,
-    }),
-    // JwtModule.forRoot(),
-    NFTModule.forRoot({
-      confirmation: ~~_.envs.WEB3_CRYPTOSEA_CONFIRMATION_,
+      contractAddr: {
+        contractAddr: _.envs.WEB3_CRYPTOSEA_CONTADDR_,
+      },
     }),
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {
-  //implements NestModule {
-  // Middlewares...
-  // configure(consumer: MiddlewareConsumer) {
-  //   // consumer.apply(JwtMiddleware).forRoutes({
-  //   //   path: '/graphql',
-  //   //   method: RequestMethod.POST,
-  //   // });
-  // }
-}
+export class AppModule {}
