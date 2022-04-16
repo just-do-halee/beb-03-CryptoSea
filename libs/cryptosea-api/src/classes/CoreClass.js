@@ -179,3 +179,7 @@ module.exports = class {
     }
   }
 };
+
+//value:''  msg.value 
+//token price  
+
