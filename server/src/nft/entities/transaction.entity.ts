@@ -1,6 +1,5 @@
 import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 import { IsHash, IsLowercase } from 'class-validator';
-import { CoreEntity } from 'src/common/entities/core.entity';
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @InputType('TransactionInput')

@@ -12,5 +12,5 @@ export function attachExt<N extends string, E extends string>(
 }
 
 export function extToMimeType(ext: string): string {
-  return MimeType.lookup('_.' + ext);
+  return MimeType.lookup('_.' + ext) || '';
 }

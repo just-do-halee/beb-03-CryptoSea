@@ -33,7 +33,7 @@ import { MfsModule } from './mfs/mfs.module';
       provider: _.envs.WEB3_PROVIDER_URL_,
       secretKey: _.envs.WEB3_SECRET_KEY_,
       contractAddr: {
-        contractAddr: _.envs.WEB3_CRYPTOSEA_CONTADDR_,
+        cryptosea: _.envs.WEB3_CRYPTOSEA_CONTADDR_.toLowerCase(),
       },
     }),
   ],
