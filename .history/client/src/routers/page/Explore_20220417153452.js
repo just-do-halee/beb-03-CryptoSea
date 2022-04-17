@@ -49,14 +49,17 @@ const ExploreConatainer = styled(Container)`
 
 const Explore = (props) => {
   const [getData, setGetData] = useState("원피스");
-  const handleClick = (e) => {
+  const handleChange = (e) => {
     console.log(e.target.value);
-    setGetData(e.target.value);
+    // if (e.target.value === 0) {
+    //   result = "원피스";
+    // } else if (e.target.value === 1) {
+    //   result = "??";
+    // } else {
+    //   result = "????";
+    // }
+    // setGetData(result);
   };
-  useEffect(() => {
-    get();
-  }, []);
-
   useEffect(() => {
     get();
   }, [getData]);
@@ -70,35 +73,32 @@ const Explore = (props) => {
           name
           description
           url
-          transaction {
-            txhash
-          }
+          transaction
         }
         error
       }
     }
   `;
-  const [get, { loading, data, error }] = useLazyQuery(getNFT, {
+  const [get, { loading, data }] = useLazyQuery(getNFT, {
     variables: {
       where: [
         {
           attributes: [
             {
-              atype: getData,
+              akey: getData,
             },
           ],
         },
       ],
     },
   });
-
+  console.log(data);
   let nftArray;
   if (data) {
-    console.log(data);
-    // if (data.getNFTs.ok) {
-    //   console.log(data.getNFTs.ok);
-    //   nftArray = data.getNFTs.ok;
-    // }
+    if (data.getNFTs.ok) {
+      console.log(data.getNFTs.ok);
+      nftArray = data.getNFTs.ok;
+    }
   }
 
   return (
@@ -107,22 +107,25 @@ const Explore = (props) => {
       <Box className="box" sx={{ borderBottom: 1, borderColor: "divider" }}>
         <ul>
           <li>
-            <Button value="원피스" onClick={handleClick}>
-              원피스
-            </Button>
+            <Button>원피스</Button>
           </li>
           <li>
-            <Button value="나루토" onClick={handleClick}>
-              나루토
-            </Button>
+            <Button>원피스</Button>
           </li>
           <li>
-            <Button value="블리치">원피스</Button>
+            <Button>원피스</Button>
           </li>
         </ul>
       </Box>
-
-      {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
+      {/* <TabPanel value={0} index={0}>
+        {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
+      </TabPanel>
+      <TabPanel value={1} index={1}>
+        {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
+      </TabPanel>
+      <TabPanel value={2} index={2}>
+        {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
+      </TabPanel> */}
     </ExploreConatainer>
   );
 };

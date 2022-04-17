@@ -84,7 +84,7 @@ const Explore = (props) => {
         {
           attributes: [
             {
-              atype: getData,
+              akey: getData,
             },
           ],
         },
@@ -92,13 +92,18 @@ const Explore = (props) => {
     },
   });
 
-  let nftArray;
   if (data) {
     console.log(data);
-    // if (data.getNFTs.ok) {
-    //   console.log(data.getNFTs.ok);
-    //   nftArray = data.getNFTs.ok;
-    // }
+  } else {
+    console.log(error);
+  }
+
+  let nftArray;
+  if (data) {
+    if (data.getNFTs.ok) {
+      console.log(data.getNFTs.ok);
+      nftArray = data.getNFTs.ok;
+    }
   }
 
   return (

@@ -70,36 +70,36 @@ const Explore = (props) => {
           name
           description
           url
-          transaction {
-            txhash
-          }
+          transaction
         }
         error
       }
     }
   `;
-  const [get, { loading, data, error }] = useLazyQuery(getNFT, {
+  const [get, { loading, data }] = useLazyQuery(getNFT, {
     variables: {
       where: [
         {
           attributes: [
             {
-              atype: getData,
+              akey: getData,
             },
           ],
         },
       ],
     },
   });
-
-  let nftArray;
   if (data) {
     console.log(data);
-    // if (data.getNFTs.ok) {
-    //   console.log(data.getNFTs.ok);
-    //   nftArray = data.getNFTs.ok;
-    // }
   }
+
+  // let nftArray;
+  // if (data) {
+  //   if (data.getNFTs.ok) {
+  //     console.log(data.getNFTs.ok);
+  //     nftArray = data.getNFTs.ok;
+  //   }
+  // }
 
   return (
     <ExploreConatainer>
@@ -122,7 +122,7 @@ const Explore = (props) => {
         </ul>
       </Box>
 
-      {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
+      {/* {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />} */}
     </ExploreConatainer>
   );
 };

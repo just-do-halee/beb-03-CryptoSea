@@ -139,13 +139,13 @@ const CreatePage = () => {
           hash,
         },
       });
-      console.log(response);
-      // if (data.cacheNFT.ok !== "") {
-      //   console.log(data.cacheNFT.ok);
-      //   window.alert("NFT 발행완료");
-      // } else {
-      //   window.alert("민팅에 실패했습니다.");
-      // }
+
+      if (data.cacheNFT.ok !== "") {
+        console.log(data.cacheNFT.ok);
+        window.alert("NFT 발행완료");
+      } else {
+        window.alert("민팅에 실패했습니다.");
+      }
     } catch (err) {
       console.log(err);
     }

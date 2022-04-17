@@ -55,11 +55,10 @@ const Explore = (props) => {
   };
   useEffect(() => {
     get();
-  }, []);
-
+  }, [getData]);
   useEffect(() => {
     get();
-  }, [getData]);
+  }, []);
 
   //!!! 쿼리 수정 요망
   const getNFT = gql`
@@ -70,35 +69,32 @@ const Explore = (props) => {
           name
           description
           url
-          transaction {
-            txhash
-          }
+          transaction
         }
         error
       }
     }
   `;
-  const [get, { loading, data, error }] = useLazyQuery(getNFT, {
+  const [get, { loading, data }] = useLazyQuery(getNFT, {
     variables: {
       where: [
         {
           attributes: [
             {
-              atype: getData,
+              akey: getData,
             },
           ],
         },
       ],
     },
   });
-
+  console.log(data);
   let nftArray;
   if (data) {
-    console.log(data);
-    // if (data.getNFTs.ok) {
-    //   console.log(data.getNFTs.ok);
-    //   nftArray = data.getNFTs.ok;
-    // }
+    if (data.getNFTs.ok) {
+      console.log(data.getNFTs.ok);
+      nftArray = data.getNFTs.ok;
+    }
   }
 
   return (
@@ -117,7 +113,7 @@ const Explore = (props) => {
             </Button>
           </li>
           <li>
-            <Button value="블리치">원피스</Button>
+            <Button>원피스</Button>
           </li>
         </ul>
       </Box>

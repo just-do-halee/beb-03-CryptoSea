@@ -84,7 +84,7 @@ const Explore = (props) => {
         {
           attributes: [
             {
-              atype: getData,
+              akey: getData,
             },
           ],
         },
