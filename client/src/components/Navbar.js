@@ -1,14 +1,15 @@
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
+
 import { useEffect } from "react";
 import { Avatar } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import StyledInput from "../common/StyledInput";
+import StyledInput from "./common/StyledInput";
 
 import { useDispatch, useSelector } from "react-redux";
-import { logIn, logOut } from "../../redux/account/accountSlice";
+
 import { Link } from "react-router-dom";
-import connectWallet from "../../Controller/ConnectWallet";
+import connectWallet from "../Controller/ConnectWallet";
+import Details from "./Details/Details.js"
 
 const NavbarContainer = styled.nav`
   width: 1300px;
@@ -26,9 +27,9 @@ const NavbarContainer = styled.nav`
   }
   .search-bar {
     width: 600px;
-    /* border: 1px solid black; */
     display: flex;
     justify-content: center;
+
   }
   ul {
     width: 400px;
@@ -39,9 +40,16 @@ const NavbarContainer = styled.nav`
     display: flex;
     justify-content: space-between;
   }
+
+  li {
+    font-size: 17px;
+    font-weight: bold;
+  }
 `;
+
 const SearchInput = styled(StyledInput)`
   width: 500px;
+  font-size: 15px;
 `;
 const Logo = styled.img.attrs({
   src: "https://media.discordapp.net/attachments/961785188399087616/963737072219349003/logo-removebg-preview_1.png",
@@ -58,12 +66,12 @@ const Navbar = () => {
   }, [accounts]);
   return (
     <NavbarContainer>
-      <Logo />
+      <Link to="/"><Logo /></Link>
       <div className="search-bar">
         <form action="">
           <SearchInput
             type="search"
-            placeholder="Search items,collections,and accounts"
+            placeholder="  Search items, collections, and accounts"
           />
         </form>
       </div>
@@ -75,12 +83,15 @@ const Navbar = () => {
           <Link to="/create">Create</Link>
         </li>
         <li>
+          <Link to="/details">Details</Link>
+        </li>
+        <li>
           {accounts !== "" ? (
             <Link to="/myAccounts">
               <Avatar sx={{ bgcolor: "#caf1fa" }}>L</Avatar>
             </Link>
           ) : (
-            <Avatar>N</Avatar>
+            <Avatar></Avatar>
           )}
         </li>
         <li>
