@@ -4,14 +4,13 @@ import { create } from "ipfs-http-client";
 import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
+import UploadImg from '../../components/create/UploadImg';
+import UploadName from '../../components/create/UploadName';
+import UploadAttributes from '../../components/create/UploadAttribues';
+import Footbar from '../../components/common/Footbar';
+import UploadDescription from '../../components/create/UploadDescription';
+import api from '../../web3/web3';
 
-import UploadDescription from "../../components/create/UploadDescription.js";
-import UploadImg from "../../components/create/UploadImg.js";
-import UploadName from "../../components/create/UploadName.js";
-
-import UploadAttributes from "../../components/create/UploadAttribues.js";
-import api from "../../web3/web3.js";
-import { client } from "../../index.js";
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
 const Container = styled.section`
@@ -25,7 +24,7 @@ const Container = styled.section`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  /* border: 1px solid black; */
+
   h1 {
     margin-bottom: 16px;
     font-weight: 800;
@@ -60,6 +59,7 @@ const Hash_Query = gql`
 `;
 
 const CreatePage = () => {
+  //월렛 연결
   const [account, setAccount] = useState();
 
   const connectwallet = async () => {
@@ -71,15 +71,14 @@ const CreatePage = () => {
     }
   };
   useEffect(() => {
-    connectwallet().then(setAccount);
+    connectwallet()
+      .then(setAccount)
+      .catch((err) => console.log(err));
   }, []);
 
-  const [getData, { loading, error, data }] = useMutation(Hash_Query);
-
-  // console.log(account);
   const nftData = useSelector((state) => state.createNFT);
-
-  console.log(`nftData : ${nftData}`);
+  console.log(nftData);
+  //ipfs -> 이미지 전송
   const ipfsTransferImage = async () => {
     const { image } = nftData;
 
@@ -96,6 +95,7 @@ const CreatePage = () => {
     }
   };
 
+  // ipfs-> 메타데이터 전송
   const ipfsTransferMetaData = async (cid) => {
     const { name, description, attributes, image } = nftData;
     let { type } = image;
@@ -123,6 +123,9 @@ const CreatePage = () => {
     }
   };
 
+  // blockchain -> nft 발행
+  // Server -> 트랜잭션 발행
+  const [getData, { loading, error, data }] = useMutation(Hash_Query);
   const sendTransaction = async (metaCid) => {
     try {
       const result = await api.mintNFT(metaCid);
@@ -146,20 +149,23 @@ const CreatePage = () => {
   };
 
   return (
-    <Container>
-      <h1>Create New Item</h1>
-      <p>
-        <span>*</span> Required fields
-      </p>
-      <UploadImg />
-      <UploadName />
-      {/* <UploadLink /> */}
-      <UploadDescription />
-      <UploadAttributes />
-      <CreateButton variant="contained" onClick={ipfsTransferImage}>
-        Create
-      </CreateButton>
-    </Container>
+    <>
+      <Container>
+        <h1>Create New Item</h1>
+        <p>
+          <span>*</span> Required fields
+        </p>
+        <UploadImg />
+        <UploadName />
+        <UploadDescription />
+        {/* <UploadCategory /> */}
+        <UploadAttributes />
+        <CreateButton variant="contained" onClick={ipfsTransferImage}>
+          Create
+        </CreateButton>
+      </Container>
+      <Footbar />
+    </>
   );
 };
 

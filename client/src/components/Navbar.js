@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// import Details from "./Details/Details.js"
 import { useEffect, useState } from "react";
 import { Avatar, Button } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -32,9 +33,9 @@ const NavbarContainer = styled.nav`
   }
   .search-bar {
     width: 600px;
-    /* border: 1px solid black; */
     display: flex;
     justify-content: center;
+
   }
   ul {
     width: 400px;
@@ -45,12 +46,20 @@ const NavbarContainer = styled.nav`
     display: flex;
     justify-content: space-between;
   }
+
+
+  li {
+    font-size: 17px;
+    font-weight: bold;
+
   .log-out {
     cursor: pointer;
   }
 `;
+
 const SearchInput = styled(StyledInput)`
   width: 500px;
+  font-size: 15px;
 `;
 const Logo = styled.img.attrs({
   src: "https://media.discordapp.net/attachments/961785188399087616/963737072219349003/logo-removebg-preview_1.png",
@@ -62,25 +71,11 @@ const Logo = styled.img.attrs({
 
 //NavBar 반응형 구현!!!!!
 
-const getNFT = gql`
-  query getNFTs($where: [PartialNFTInput!]!) {
-    getNFTs(where: $where) {
-      ok {
-        tid
-        name
-        description
-        url
-      }
-      error
-    }
-  }
-`;
-
-const Navbar = () => {
+const Navbar = (props) => {
+  const { setIsSearch, setSearchItem } = props;
   const dispatch = useDispatch();
   const [accounts, setAccounts] = useState("");
   const { register, handleSubmit } = useForm();
-  const [searchItem, setSearchItem] = useState({ keyword: "" });
 
   useEffect(() => {
     if (accounts === "") {
@@ -90,39 +85,24 @@ const Navbar = () => {
     }
   }, [accounts]);
 
-  useEffect(() => {
-    search();
-  }, [searchItem]);
-
   const onSubmit = (data) => {
-    setSearchItem({ keyword: data.search });
+    setIsSearch(true);
+    setSearchItem(data.search);
   };
-  const [search, { called, loading, data }] = useLazyQuery(getNFT, {
-    variables: {
-      where: [
-        { name: "우솝" },
-        { description: "우솝" },
-        { attributes: [{ akey: "우솝" }] },
-        { attributes: [{ avalue: "우솝" }] },
-      ],
-    },
-  });
 
-  //{search:inputValue}
-  console.log(searchItem.keyword);
-  console.log(called, loading, data);
   return (
     <NavbarContainer>
-      <Link to="/">
-        <Logo />
-      </Link>
+
+      <Link to="/"><Logo /></Link>
 
       <div className="search-bar">
         <form onSubmit={handleSubmit(onSubmit)}>
           <SearchInput
             type="search"
+
             placeholder="Search items,collections,and accounts"
             {...register("search")}
+
           />
           <Button type="submit">검색</Button>
         </form>
@@ -140,7 +120,7 @@ const Navbar = () => {
               <Avatar sx={{ bgcolor: "#caf1fa" }}>L</Avatar>
             </Link>
           ) : (
-            <Avatar>N</Avatar>
+            <Avatar></Avatar>
           )}
         </li>
         <li>
@@ -159,8 +139,8 @@ const Navbar = () => {
             </div>
           )}
         </li>
-      </ul>
-    </NavbarContainer>
+      </ul >
+    </NavbarContainer >
   );
 };
 

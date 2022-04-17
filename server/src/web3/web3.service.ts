@@ -1,25 +1,41 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EnvService } from '../env/env.service';
+import { CryptoSeaService } from './cryptosea.service';
 import { CONFIG_OPTIONS } from './web3.constants';
-import { Web3ModuleOptions } from './web3.interfaces';
-import * as CAPI from 'cryptosea-api';
+import { EthService, Web3ModuleOptions } from './web3.interfaces';
+import { Eth } from 'web3-eth';
+import { AsyncTryCatch } from 'src/common/decorators/trycatch.decorator';
+import { BaseResult } from 'src/common/types/result.type';
+import { Ok } from 'src/common/functions/result.function';
 
 @Injectable()
 export class Web3Service {
-  readonly cryptosea: any;
-  private readonly provider: any;
-  private readonly secretKey: string;
+  eth: Eth;
+  isInitialized: boolean = false;
   constructor(
     @Inject(CONFIG_OPTIONS)
-    private readonly options: Web3ModuleOptions,
-    private readonly env: EnvService,
+    readonly options: Web3ModuleOptions,
+    readonly cryptosea: CryptoSeaService,
   ) {
-    const { provider, secretKey } = options;
-    this.cryptosea = CAPI.new(provider, env.get('WEB3_CRYPTOSEA_CONTADDR_'));
-    this.provider = provider;
-    this.secretKey = secretKey;
+    this.eth = cryptosea.eth; // initial eth
+    this.reset().then(() => {
+      this.isInitialized = true;
+    });
   }
-  async reset(): Promise<void> {
-    await this.cryptosea.connectWallet(this.secretKey);
+  @AsyncTryCatch(`failed initializing web3 services : `)
+  async reset(): Promise<BaseResult> {
+    await this.cryptosea.init();
+    return Ok(true);
+  }
+  setEth<T extends EthService>(ethService: T): void {
+    this.eth = ethService.eth;
+  }
+  @AsyncTryCatch(`couldn't get the transaction : `)
+  getTransaction(txhash: string): Promise<any> {
+    return this.cryptosea.api.getTransaction(txhash);
+  }
+  @AsyncTryCatch(`couldn't get latest block number : `)
+  async getConfirmation(targetBlockNumber: number): Promise<number> {
+    const latestBlockNumber = await this.eth.getBlockNumber();
+    return latestBlockNumber - targetBlockNumber;
   }
 }

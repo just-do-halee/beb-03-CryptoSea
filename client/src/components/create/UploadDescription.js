@@ -6,6 +6,7 @@ import FormInput from '../common/FormInput.js';
 
 import { incrementDescription } from '../../redux/createNFT/nftSlice.js';
 
+
 const TextAreaInput = styled(FormInput)`
   height: 150px;
 `;

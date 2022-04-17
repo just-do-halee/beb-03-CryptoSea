@@ -22,7 +22,7 @@ export function AsyncTryCatch(originMsg: string = '') {
       try {
         return await origin.apply(this, args);
       } catch (e) {
-        console.error(e);
+        console.error(e); // put
         if (e.message) e = e.message;
         return Err(`${originMsg}${e}`);
       }
