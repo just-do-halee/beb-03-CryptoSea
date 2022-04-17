@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import { useDispatch } from 'react-redux';
-import { useRef, useState } from 'react';
-import CreateContaier from '../common/CreateContainer.js';
-import { incrementImgFile } from '../../redux/createNFT/nftSlice.js';
-import { Button } from '@mui/material';
+import { useDispatch } from "react-redux";
+import { useRef, useState } from "react";
+import CreateContaier from "../common/CreateContainer.js";
+import { incrementImgFile } from "../../redux/createNFT/nftSlice.js";
+import { Button } from "@mui/material";
 
 const Container = styled(CreateContaier)`
   div {
@@ -31,7 +31,7 @@ const Container = styled(CreateContaier)`
       cursor: pointer;
       box-sizing: border-box;
       text-rendering: optimizelegibility;
-      font-feature-settings: 'liga' !important;
+      font-feature-settings: "liga" !important;
       font-size: 84px !important;
       font-weight: normal;
       font-style: normal;
@@ -57,15 +57,27 @@ const UploadImg = () => {
     nftImgInput.current.click();
   };
 
-  const [imageSrc, setImageSrc] = useState('');
+  const [imageSrc, setImageSrc] = useState("");
 
   const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        resolve();
+      };
+    });
+  };
+
+  const encodeFileToArrayBuffer = (fileBlob) => {
     const reader = new FileReader();
     reader.readAsArrayBuffer(fileBlob);
     return new Promise((resolve) => {
       reader.onload = () => {
-        setImageSrc(reader.result);
-        dispatch(incrementImgFile(reader.result));
+        dispatch(
+          incrementImgFile({ buffer: reader.result, type: fileBlob.type })
+        );
         resolve();
       };
     });
@@ -87,7 +99,8 @@ const UploadImg = () => {
           ref={nftImgInput}
           accept="image/*"
           onChange={(e) => {
-            setImageSrc(encodeFileToBase64(e.target.files[0]));
+            encodeFileToBase64(e.target.files[0]);
+            encodeFileToArrayBuffer(e.target.files[0]);
           }}
         />
       </div>

@@ -1,15 +1,15 @@
-import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { create } from "ipfs-http-client";
 import { Button } from "@mui/material";
-import UploadDescription from "../../components/create/UploadDescription.js";
-import UploadImg from "../../components/create/UploadImg.js";
-import UploadLink from "../../components/create/UploadLink.js";
-import UploadName from "../../components/create/UploadName.js";
-
-import UploadAttributes from "../../components/create/UploadAttribues.js";
-import { web3 } from "../../web3/web3";
+import { useState, useEffect } from "react";
+import { gql, useMutation } from "@apollo/client";
+import UploadImg from '../../components/create/UploadImg';
+import UploadName from '../../components/create/UploadName';
+import UploadAttributes from '../../components/create/UploadAttribues';
+import Footbar from '../../components/common/Footbar';
+import UploadDescription from '../../components/create/UploadDescription';
+import api from '../../web3/web3';
 
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
@@ -24,7 +24,7 @@ const Container = styled.section`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  /* border: 1px solid black; */
+
   h1 {
     margin-bottom: 16px;
     font-weight: 800;
@@ -47,75 +47,125 @@ const CreateButton = styled(Button)`
   height: 50px;
   border-radius: 20px;
 `;
+const Hash_Query = gql`
+  mutation CreatePage($hash: String!) {
+    cacheNFT(txhash: $hash) {
+      ok {
+        url
+      }
+      error
+    }
+  }
+`;
 
 const CreatePage = () => {
+  //월렛 연결
+  const [account, setAccount] = useState();
+
+  const connectwallet = async () => {
+    try {
+      const wallet = await api.connectWallet();
+      return wallet.account;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    connectwallet()
+      .then(setAccount)
+      .catch((err) => console.log(err));
+  }, []);
+
   const nftData = useSelector((state) => state.createNFT);
-  const myWalletAdress = useSelector((state) => state.accounts);
   console.log(nftData);
+  //ipfs -> 이미지 전송
   const ipfsTransferImage = async () => {
     const { image } = nftData;
-    //image = Buffer
+
     const client = create("https://ipfs.infura.io:5001/api/v0");
     try {
-      const created = await client.add(image);
-      console.log(created);
+      const created = await client.add(image.buffer);
+      // console.log(created);
       const cid = created.cid._baseCache.get("z");
-      console.log(cid);
-      ipfsTransferMetaData(cid);
+      console.log(`imagecid`);
+      await ipfsTransferMetaData(cid);
+      console.log("ipfs 이미지전송 성공");
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  // ipfs-> 메타데이터 전송
   const ipfsTransferMetaData = async (cid) => {
-    const { name, description, attributes } = nftData;
+    const { name, description, attributes, image } = nftData;
+    let { type } = image;
+    type = type.split("/");
+    const cext = type[type.length - 1];
+    console.log(`image type = ${cext}`);
     const metaData = {
       ctype: "ipfs",
       cid,
+      cext,
       name,
       description,
       attributes,
     };
+    console.log(`metaData = ${metaData}`);
     try {
       const client = create("https://ipfs.infura.io:5001/api/v0");
       const created = await client.add(JSON.stringify(metaData));
-      console.log(created);
+      console.log(`cid = ${JSON.stringify(created.cid._baseCache.get("z"))}`);
       const cid = created.cid._baseCache.get("z");
-      console.log(cid);
+      await sendTransaction(cid);
+      console.log("metaData ipfs 성공");
     } catch (err) {
       console.log(err);
     }
   };
 
-  // const sendTransaction = async (metaCid, ContractAddress) => {
-  //   console.log(myWalletAdress);
-  //   try {
-  //     web3.eth.sendTransaction({
-  //       from: ContractAddress,
-  //       to: myWalletAdress,
-  //       value:,
-  //       data:
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  // blockchain -> nft 발행
+  // Server -> 트랜잭션 발행
+  const [getData, { loading, error, data }] = useMutation(Hash_Query);
+  const sendTransaction = async (metaCid) => {
+    try {
+      const result = await api.mintNFT(metaCid);
+      window.alert("민팅 중입니다! 잠시만 기다려주세요!");
+      const hash = result.transactionHash.slice(2);
+      console.log(`transactionHash = ${hash}`);
+      const response = await getData({
+        variables: {
+          hash,
+        },
+      });
+      console.log(response);
+      if (response.data.cacheNFT.ok.url !== "") {
+        window.alert("NFT 발행완료");
+      } else {
+        window.alert("민팅에 실패했습니다.");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <Container>
-      <h1>Create New Item</h1>
-      <p>
-        <span>*</span> Required fields
-      </p>
-      <UploadImg />
-      <UploadName />
-      {/* <UploadLink /> */}
-      <UploadDescription />
-      <UploadAttributes />
-      <CreateButton variant="contained" onClick={ipfsTransferImage}>
-        Create
-      </CreateButton>
-    </Container>
+    <>
+      <Container>
+        <h1>Create New Item</h1>
+        <p>
+          <span>*</span> Required fields
+        </p>
+        <UploadImg />
+        <UploadName />
+        <UploadDescription />
+        {/* <UploadCategory /> */}
+        <UploadAttributes />
+        <CreateButton variant="contained" onClick={ipfsTransferImage}>
+          Create
+        </CreateButton>
+      </Container>
+      <Footbar />
+    </>
   );
 };
 

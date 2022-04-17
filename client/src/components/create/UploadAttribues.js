@@ -1,58 +1,125 @@
-import styled from "styled-components";
-import { useState } from "react";
-import { Button } from "@mui/material";
 import { incrementAttributes } from "../../redux/createNFT/nftSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import { useForm } from "react-hook-form";
-
+import { Select, MenuItem, Button, InputLabel } from "@mui/material";
+import styled from "styled-components";
 import CreateContaier from "../common/CreateContainer";
 import FlexContainer from "../common/FlexContainer";
 import StyledInput from "../common/StyledInput";
+import { useState } from "react";
 
+const StyleSelect = styled(Select)`
+  width: 350px;
+  height: 50px;
+  border-radius: 15px;
+
+  margin-right: 20px;
+  border: 0.3px solid #caf1fa;
+`;
 const UploadAttributes = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
-  const [formCount, setFormCount] = useState([1]);
+
   const attributes = useSelector((state) => state.createNFT.attributes);
-  const plusCount = () => {
-    setFormCount([...formCount, [1]]);
-  };
-  const plusAttributes = (data) => {
-    console.log(data);
-  };
+
   return (
     <CreateContaier>
       <h3>Attributes</h3>
       <p>Add a property to your nft.</p>
       {attributes.map((value, index) => {
-        return (
-          <div key={index}>
-            <FlexContainer>
-              <StyledInput
-                placeholder="Type"
-                onChange={(e) =>
-                  dispatch(
-                    incrementAttributes({ atype: e.target.value, index })
-                  )
-                }
-              />
-              <StyledInput
-                placeholder="Key"
-                onChange={(e) =>
-                  dispatch(incrementAttributes({ akey: e.target.value, index }))
-                }
-              />
-              <StyledInput
-                placeholder="Value"
-                onChange={(e) =>
-                  dispatch(
-                    incrementAttributes({ avalue: e.target.value, index })
-                  )
-                }
-              />
-            </FlexContainer>
-          </div>
-        );
+        if (index === 0) {
+          return (
+            <div key={index}>
+              <h3 className="attributes-type">Category</h3>
+              <FlexContainer>
+                <StyleSelect
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Type"
+                  onChange={(e) => {
+                    dispatch(
+                      incrementAttributes({ atype: e.target.value, index })
+                    );
+                  }}
+                >
+                  <MenuItem value={"Category"}>Category</MenuItem>
+                </StyleSelect>
+                <StyledInput
+                  onChane={(e) =>
+                    dispatch(
+                      incrementAttributes({ avalue: e.target.value, index })
+                    )
+                  }
+                />
+              </FlexContainer>
+            </div>
+          );
+        } else if (index === 1) {
+          return (
+            <div key={index}>
+              <h3 className="attributes-type">Collection</h3>
+              <FlexContainer>
+                <StyleSelect
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Type"
+                  onChange={(e) => {
+                    dispatch(
+                      incrementAttributes({ atype: e.target.value, index })
+                    );
+                  }}
+                >
+                  <MenuItem value={"Collection"}>Collection</MenuItem>
+                </StyleSelect>
+                <StyledInput
+                  onChane={(e) =>
+                    dispatch(
+                      incrementAttributes({ avalue: e.target.value, index })
+                    )
+                  }
+                />
+              </FlexContainer>
+            </div>
+          );
+        } else {
+          return (
+            <div key={index}>
+              <h3 className="attributes-type">Properties</h3>
+              <FlexContainer>
+                <StyleSelect
+                  label="Type *"
+                  // value={"Type"}
+                  onChange={(e) =>
+                    dispatch(
+                      incrementAttributes({ atype: e.target.value, index })
+                    )
+                  }
+                >
+                  <MenuItem value={"Base"}>Base</MenuItem>
+                  <MenuItem value={"Eyes"}>Eyes</MenuItem>
+                  <MenuItem value={"Level"}>Level</MenuItem>
+                  <MenuItem value={"Stamina"}>Stamina</MenuItem>
+                  <MenuItem value={"Personality"}>Personality</MenuItem>
+                </StyleSelect>
+
+                <StyledInput
+                  placeholder="Key"
+                  onChange={(e) =>
+                    dispatch(
+                      incrementAttributes({ akey: e.target.value, index })
+                    )
+                  }
+                />
+                <StyledInput
+                  placeholder="Value"
+                  onChange={(e) =>
+                    dispatch(
+                      incrementAttributes({ avalue: e.target.value, index })
+                    )
+                  }
+                />
+              </FlexContainer>
+            </div>
+          );
+        }
       })}
 
       <Button onClick={() => dispatch(incrementAttributes("plus"))}>

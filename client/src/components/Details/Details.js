@@ -8,9 +8,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faTag, faListRadio, faBarsSort } from '@fortawesome/free-solid-svg-icons';
-// import { faListRadio } from '@fortawesome/free-solid-svg-icons';
+
 
 
 
@@ -138,7 +136,6 @@ const Details = () => {
                         <div className='listings'>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1a-content" id="panel1a-header">
-                                {/* <FontAwesomeIcon icon={faTag} className='tag' /> */}
                                 <Typography>Listings</Typography>
                             </AccordionSummary></div>
                         <AccordionDetails>
@@ -162,7 +159,6 @@ const Details = () => {
                         <div className='offerbox'>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1a-content" id="panel1a-header">
-                                {/* <FontAwesomeIcon icon={faListRadio} className='list' /> */}
                                 <Typography>Offer</Typography>
                             </AccordionSummary></div>
                         <AccordionDetails>
@@ -178,7 +174,6 @@ const Details = () => {
                     <div className='description'>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content" id="panel1a-header">
-                            {/* <FontAwesomeIcon icon={faBarsSort} className='descript' /> */}
                             <Typography>Description</Typography>
                         </AccordionSummary></div>
                     <AccordionDetails>
