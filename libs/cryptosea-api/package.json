@@ -21,7 +21,9 @@
     "marketplace",
     "crypto"
   ],
-  "author": "_NAME_ <_EMAIL_>",
+  "authors": [
+    "just-do-halee <just.do.halee>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/codestates/beb-03-CryptoSea/issues"

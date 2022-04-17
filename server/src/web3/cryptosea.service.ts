@@ -167,7 +167,7 @@ export class CryptoSeaService implements EthService {
         txhash: this.processTxHash(txhash),
       },
     });
-
+    
     await validateOrReject(metadata);
 
     // upload to RDBMS
