@@ -49,6 +49,16 @@ const CreateButton = styled(Button)`
   height: 50px;
   border-radius: 20px;
 `;
+const Hash_Query = gql`
+  mutation CreatePage($hash: String!) {
+    cacheNFT(txhash: $hash) {
+      ok {
+        url
+      }
+      error
+    }
+  }
+`;
 
 const CreatePage = () => {
   //월렛 연결
@@ -117,16 +127,6 @@ const CreatePage = () => {
 
   // blockchain -> nft 발행
   // Server -> 트랜잭션 발행
-  const Hash_Query = gql`
-    mutation CreatePage($hash: String!) {
-      cacheNFT(txhash: $hash) {
-        ok {
-          url
-        }
-        error
-      }
-    }
-  `;
   const [getData, { loading, error, data }] = useMutation(Hash_Query);
   const sendTransaction = async (metaCid) => {
     try {
@@ -140,12 +140,11 @@ const CreatePage = () => {
         },
       });
       console.log(response);
-      // if (data.cacheNFT.ok !== "") {
-      //   console.log(data.cacheNFT.ok);
-      //   window.alert("NFT 발행완료");
-      // } else {
-      //   window.alert("민팅에 실패했습니다.");
-      // }
+      if (response.data.cacheNFT.ok.url.ok !== "") {
+        window.alert("NFT 발행완료");
+      } else {
+        window.alert("민팅에 실패했습니다.");
+      }
     } catch (err) {
       console.log(err);
     }

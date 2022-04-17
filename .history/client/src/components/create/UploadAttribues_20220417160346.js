@@ -116,7 +116,7 @@ const UploadAttributes = () => {
                   placeholder="Key"
                   onChange={(e) =>
                     dispatch(
-                      incrementAttributes({ avalue: e.target.value, index })
+                      incrementAttributes({ akey: e.target.value, index })
                     )
                   }
                 />

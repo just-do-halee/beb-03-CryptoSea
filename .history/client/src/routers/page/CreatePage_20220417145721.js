@@ -139,9 +139,8 @@ const CreatePage = () => {
           hash,
         },
       });
-      console.log(response);
-      // if (data.cacheNFT.ok !== "") {
-      //   console.log(data.cacheNFT.ok);
+      console.log(response.ok);
+      // if (response.ok !== "") {
       //   window.alert("NFT 발행완료");
       // } else {
       //   window.alert("민팅에 실패했습니다.");
