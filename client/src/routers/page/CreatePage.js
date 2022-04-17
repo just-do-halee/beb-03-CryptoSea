@@ -13,6 +13,7 @@ import UploadAttributes from "../../components/create/UploadAttribues";
 import api from "../../web3/web3";
 import Footbar from "../../components/common/Footbar";
 
+
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
 const Container = styled.section`
@@ -127,16 +128,6 @@ const CreatePage = () => {
 
   // blockchain -> nft 발행
   // Server -> 트랜잭션 발행
-  // const Hash_Query = gql`
-  //   mutation CreatePage($hash: String!) {
-  //     cacheNFT(txhash: $hash) {
-  //       ok {
-  //         url
-  //       }
-  //       error
-  //     }
-  //   }
-  // `;
   const [getData, { loading, error, data }] = useMutation(Hash_Query);
   const sendTransaction = async (metaCid) => {
     try {
@@ -144,17 +135,7 @@ const CreatePage = () => {
       window.alert("민팅 중입니다! 잠시만 기다려주세요!");
       const hash = result.transactionHash.slice(2);
       console.log(`transactionHash = ${hash}`);
-      // const response = await getData({
-      //   variables: {
-      //     hash,
-      //   },
-      // });
-      // console.log(response);
-      // if (response.data.cacheNFT.ok.url !== "") {
-      //   window.alert("NFT 발행완료");
-      // } else {
-      window.alert("민팅에 실패했습니다.");
-      // }
+
     } catch (err) {
       console.log(err);
     }

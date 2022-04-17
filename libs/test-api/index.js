@@ -1,5 +1,4 @@
 const CAPI = require("cryptosea-api");
-
 // browser
 // await window.ethereum.request({method: 'eth_requestAccounts'});
 // const api = CAPI.new(window.ethereum);
@@ -17,21 +16,26 @@ async function run() {
 
   console.log(api.account);
 
-  const listingPrice = await api.getListingPrice();
-  let price = 25000000000000;
-
+  //const listingPrice = await api.getListingPrice();
+  //let price = 25000000000000;
   //const marketItem = await api.createMarketItem("2", price, listingPrice);
   //console.log(marketItem);
 
-  /*  const result = await api.mintNFT(
-    "QmW7rZAbgHM7nbwtPjfSLVZ5TqbfeAfkrM5AeUQS9gAY7t"
-  ); */
-
-  const result = await api.getTransactionReceipt(
-    "0x1e0cda1de9ae3b5e0faddb8d2a7088ec125edf64067891a5bb75b9e56da54370"
+  const result = await api.mintNFT(
+    "QmaGoxHfuuYFyqxSJFXp5fSsHnfa4AUbibJ1ibP5wVYGTa"
   );
+  console.log(result);
+  const tokenId = ~~result.events.Transfer.returnValues.tokenId;
+  console.log("tokenId:" + tokenId);
+
+  const blockNumber = await api.getBlockNumber(tokenId);
+  console.log(blockNumber);
+
+  /* const result = await api.getTransactionReceipt(
+    "0x1e0cda1de9ae3b5e0faddb8d2a7088ec125edf64067891a5bb75b9e56da54370"
+  ); */
   // console.log(result.logs[2].data);
-  console.log(api.decode(result.logs[2].data, "price").price);
+  //console.log(api.decode(result.logs[2].data, "price").price);
 }
 
 run();
@@ -49,9 +53,13 @@ run();
   for (output in tokenId) {
      console.log("tokenId: " + JSON.stringify(output));
   }
+  //
+  const result = await api.mintNFT(
+    "QmW7rZAbgHM7nbwtPjfSLVZ5TqbfeAfkrM5AeUQS9gAY7t"
+  );
 
   const tokenId = ~~result.events.Transfer.returnValues.tokenId;
-
+  //
   console.log("tokenId : " + tokenId);
 
   const owner = await api.owner();

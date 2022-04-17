@@ -7,10 +7,6 @@ import { gql } from "@apollo/client";
 import { useLazyQuery } from "@apollo/client";
 import { CircularProgress, Button } from "@mui/material";
 
-// import { useParams } from 'react-router-dom';
-
-
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -92,6 +88,7 @@ const Explore = (props) => {
       }
     }
   `;
+  
   const [get, { loading, data, error }] = useLazyQuery(getNFT, {
     variables: {
       where: [
@@ -115,11 +112,11 @@ const Explore = (props) => {
     // }
   }
 
-
   return (
     <ExploreConatainer>
       <h1>Explore Collection</h1>
       <Box className="box" sx={{ borderBottom: 1, borderColor: "divider" }}>
+
         <ul>
           <li>
             <Button value="원피스" onClick={handleClick}>
@@ -138,6 +135,7 @@ const Explore = (props) => {
       </Box>
 
       {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
+
     </ExploreConatainer>
   );
 };

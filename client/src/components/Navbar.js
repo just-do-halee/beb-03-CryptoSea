@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 import { useEffect, useState, useRef } from "react";
 import { Avatar, Button } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -10,7 +9,8 @@ import getAccount from "../Controller/getAccount";
 import connectWallet from "../Controller/ConnectWallet";
 import disConnectWallet from "../Controller/disConnectWallet";
 import { logIn, logOut } from "../redux/account/accountSlice";
-
+import { useLazyQuery } from "@apollo/client";
+import gql from "graphql-tag";
 
 const NavbarContainer = styled.nav`
   width: 1300px;
@@ -28,9 +28,9 @@ const NavbarContainer = styled.nav`
   }
   .search-bar {
     width: 600px;
-    /* border: 1px solid black; */
     display: flex;
     justify-content: center;
+
   }
   li {
     font-weight: bold;
@@ -45,6 +45,12 @@ const NavbarContainer = styled.nav`
     display: flex;
     justify-content: space-between;
   }
+
+
+  li {
+    font-size: 17px;
+    font-weight: bold;
+
   .log-out {
     cursor: pointer;
   }
@@ -52,6 +58,7 @@ const NavbarContainer = styled.nav`
 
 const SearchInput = styled(StyledInput)`
   width: 500px;
+  font-size: 15px;
 `;
 const Logo = styled.img.attrs({
   src: "https://media.discordapp.net/attachments/961785188399087616/963737072219349003/logo-removebg-preview_1.png",
@@ -88,11 +95,11 @@ const Navbar = (props) => {
     }
   }, [accounts]);
 
+
   return (
     <NavbarContainer>
-      <Link to="/">
-        <Logo />
-      </Link>
+
+      <Link to="/"><Logo /></Link>
 
       <div className="search-bar">
         <SearchInput
@@ -136,8 +143,8 @@ const Navbar = (props) => {
             </div>
           )}
         </li>
-      </ul>
-    </NavbarContainer>
+      </ul >
+    </NavbarContainer >
   );
 };
 
