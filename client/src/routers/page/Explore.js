@@ -5,11 +5,7 @@ import NFTContainer from "../../components/common/NFTContainer";
 import { useEffect } from "react";
 import { gql } from "@apollo/client";
 import { useLazyQuery } from "@apollo/client";
-<<<<<<< HEAD
 import { CircularProgress } from "@mui/material";
-=======
-import { CircularProgress, Button } from "@mui/material";
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -37,6 +33,7 @@ const ExploreConatainer = styled(Container)`
   align-items: center;
   h1 {
     font-size: 2rem;
+    font-weight: bold;
     width: 300px;
     margin: 0 auto;
   }
@@ -46,7 +43,6 @@ const ExploreConatainer = styled(Container)`
     justify-content: center;
     align-items: center;
   }
-<<<<<<< HEAD
 `;
 
 const Explore = (props) => {
@@ -57,26 +53,6 @@ const Explore = (props) => {
   useEffect(() => {
     get();
   }, [value]);
-=======
-  ul {
-    display: flex;
-  }
-`;
-
-const Explore = (props) => {
-  const [getData, setGetData] = useState("원피스");
-  const handleClick = (e) => {
-    console.log(e.target.value);
-    setGetData(e.target.value);
-  };
-  useEffect(() => {
-    get();
-  }, []);
-
-  useEffect(() => {
-    get();
-  }, [getData]);
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
 
   //!!! 쿼리 수정 요망
   const getNFT = gql`
@@ -87,39 +63,24 @@ const Explore = (props) => {
           name
           description
           url
-<<<<<<< HEAD
-=======
-          transaction {
-            txhash
-          }
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
         }
         error
       }
     }
   `;
-<<<<<<< HEAD
   const [get, { loading, data }] = useLazyQuery(getNFT, {
-=======
-  const [get, { loading, data, error }] = useLazyQuery(getNFT, {
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
     variables: {
       where: [
         {
           attributes: [
             {
-<<<<<<< HEAD
               akey: value,
-=======
-              atype: getData,
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
             },
           ],
         },
       ],
     },
   });
-<<<<<<< HEAD
   console.log(data);
   let nftArray;
   if (data) {
@@ -129,24 +90,11 @@ const Explore = (props) => {
     }
   }
 
-  
-=======
 
-  let nftArray;
-  if (data) {
-    console.log(data);
-    // if (data.getNFTs.ok) {
-    //   console.log(data.getNFTs.ok);
-    //   nftArray = data.getNFTs.ok;
-    // }
-  }
-
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
   return (
     <ExploreConatainer>
       <h1>Explore Collection</h1>
       <Box className="box" sx={{ borderBottom: 1, borderColor: "divider" }}>
-<<<<<<< HEAD
         <Tabs
           value={value}
           onChange={handleChange}
@@ -167,26 +115,6 @@ const Explore = (props) => {
         컬렉션3
       </TabPanel>
       {loading ? <NFTContainer data={nftArray} /> : <CircularProgress />}
-=======
-        <ul>
-          <li>
-            <Button value="원피스" onClick={handleClick}>
-              원피스
-            </Button>
-          </li>
-          <li>
-            <Button value="나루토" onClick={handleClick}>
-              나루토
-            </Button>
-          </li>
-          <li>
-            <Button value="블리치">원피스</Button>
-          </li>
-        </ul>
-      </Box>
-
-      {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
     </ExploreConatainer>
   );
 };

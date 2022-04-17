@@ -4,23 +4,12 @@ import { create } from "ipfs-http-client";
 import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
-<<<<<<< HEAD
 import UploadImg from '../../components/create/UploadImg';
 import UploadName from '../../components/create/UploadName';
 import UploadAttributes from '../../components/create/UploadAttribues';
 import Footbar from '../../components/common/Footbar';
 import UploadDescription from '../../components/create/UploadDescription';
 import api from '../../web3/web3';
-=======
-
-import UploadDescription from "../../components/create/UploadDescription.js";
-import UploadImg from "../../components/create/UploadImg.js";
-import UploadName from "../../components/create/UploadName.js";
-
-import UploadAttributes from "../../components/create/UploadAttribues.js";
-import api from "../../web3/web3.js";
-import Footbar from "../../components/common/Footbar.js";
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
 
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
@@ -136,19 +125,6 @@ const CreatePage = () => {
 
   // blockchain -> nft 발행
   // Server -> 트랜잭션 발행
-<<<<<<< HEAD
-=======
-  const Hash_Query = gql`
-    mutation CreatePage($hash: String!) {
-      cacheNFT(txhash: $hash) {
-        ok {
-          url
-        }
-        error
-      }
-    }
-  `;
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
   const [getData, { loading, error, data }] = useMutation(Hash_Query);
   const sendTransaction = async (metaCid) => {
     try {
@@ -162,20 +138,11 @@ const CreatePage = () => {
         },
       });
       console.log(response);
-<<<<<<< HEAD
       if (response.data.cacheNFT.ok.url !== "") {
         window.alert("NFT 발행완료");
       } else {
         window.alert("민팅에 실패했습니다.");
       }
-=======
-      // if (data.cacheNFT.ok !== "") {
-      //   console.log(data.cacheNFT.ok);
-      //   window.alert("NFT 발행완료");
-      // } else {
-      //   window.alert("민팅에 실패했습니다.");
-      // }
->>>>>>> f9c90b4a6e5a7f0facb48d889c6943804858eb84
     } catch (err) {
       console.log(err);
     }
