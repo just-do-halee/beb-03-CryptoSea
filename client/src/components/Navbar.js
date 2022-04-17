@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// import Details from "./Details/Details.js"
 import { useEffect, useState } from "react";
 import { Avatar, Button } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -32,9 +33,9 @@ const NavbarContainer = styled.nav`
   }
   .search-bar {
     width: 600px;
-    /* border: 1px solid black; */
     display: flex;
     justify-content: center;
+
   }
   ul {
     width: 400px;
@@ -45,6 +46,12 @@ const NavbarContainer = styled.nav`
     display: flex;
     justify-content: space-between;
   }
+
+
+  li {
+    font-size: 17px;
+    font-weight: bold;
+
   .log-out {
     cursor: pointer;
   }
@@ -52,6 +59,7 @@ const NavbarContainer = styled.nav`
 
 const SearchInput = styled(StyledInput)`
   width: 500px;
+  font-size: 15px;
 `;
 const Logo = styled.img.attrs({
   src: "https://media.discordapp.net/attachments/961785188399087616/963737072219349003/logo-removebg-preview_1.png",
@@ -78,26 +86,23 @@ const Navbar = (props) => {
   }, [accounts]);
 
   const onSubmit = (data) => {
-    if (data.search.length > 1) {
-      setIsSearch(true);
-      setSearchItem(data.search.trim());
-    } else {
-      window.prompt("두글자 이상 입력해주세요");
-    }
+    setIsSearch(true);
+    setSearchItem(data.search);
   };
 
   return (
     <NavbarContainer>
-      <Link to="/">
-        <Logo />
-      </Link>
+
+      <Link to="/"><Logo /></Link>
 
       <div className="search-bar">
         <form onSubmit={handleSubmit(onSubmit)}>
           <SearchInput
             type="search"
+
             placeholder="Search items,collections,and accounts"
             {...register("search")}
+
           />
           <Button type="submit">검색</Button>
         </form>
@@ -115,7 +120,7 @@ const Navbar = (props) => {
               <Avatar sx={{ bgcolor: "#caf1fa" }}>L</Avatar>
             </Link>
           ) : (
-            <Avatar>N</Avatar>
+            <Avatar></Avatar>
           )}
         </li>
         <li>
@@ -134,8 +139,8 @@ const Navbar = (props) => {
             </div>
           )}
         </li>
-      </ul>
-    </NavbarContainer>
+      </ul >
+    </NavbarContainer >
   );
 };
 

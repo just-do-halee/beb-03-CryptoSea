@@ -1,7 +1,7 @@
-import Section from "../../components/mainPage/Section.js";
-import Category from "../../components/mainPage/Category.js";
-import VideoSection from "../../components/mainPage/VideoSection.js";
-import Footbar from "../../components/common/Footbar.js";
+import Category from '../../components/mainPage/Category';
+import Footbar from '../../components/common/Footbar';
+import VideoSection from '../../components/mainPage/VideoSection';
+import Section from '../../components/mainPage/Section';
 
 const MainPage = () => {
   return (

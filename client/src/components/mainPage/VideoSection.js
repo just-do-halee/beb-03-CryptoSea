@@ -1,6 +1,8 @@
 import { Button } from '@mui/material';
 import ReactPlayer from 'react-player';
 import styled from 'styled-components';
+import { Link } from "react-router-dom";
+
 const Container = styled.section`
   height: 1000px;
   background-color: #f8fdff;
@@ -12,13 +14,15 @@ const Container = styled.section`
   /* border: 1px solid black; */
 
   h1 {
-    margin: 0 auto 50px;
+    margin: 0 auto 30px;
     font-size: 2rem;
+    font-weight: bold;
     text-align: center;
   }
   p {
     font-size: 1.5rem;
     text-align: center;
+    margin-bottom: 50px;
   }
   Button {
     width: 250px;
@@ -48,7 +52,9 @@ const VideoSection = () => {
           width="1000px"
           height="500px"
         ></ReactPlayer>
-        <Button variant="contained">Explore the marketplace</Button>
+        <Button variant="contained">
+          <Link to="/explore">Explore to marketplace</Link>
+        </Button>
         {/* 링크삽입 */}
       </Container>
     </>
