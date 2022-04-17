@@ -79,7 +79,7 @@ const Navbar = (props) => {
 
   const onSubmit = (data) => {
     setIsSearch(true);
-    setSearchItem(data.search.trim());
+    setSearchItem(data.search);
   };
 
   return (

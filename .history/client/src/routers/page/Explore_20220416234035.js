@@ -88,8 +88,6 @@ const Explore = (props) => {
       nftArray = data.getNFTs.ok;
     }
   }
-
-  
   return (
     <ExploreConatainer>
       <h1>Explore Collection</h1>

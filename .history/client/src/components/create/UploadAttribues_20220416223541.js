@@ -82,7 +82,6 @@ const UploadAttributes = () => {
         } else {
           return (
             <div key={index}>
-              <h3 className="attributes-type">Properties</h3>
               <FlexContainer>
                 <StyleSelect
                   label="Type *"

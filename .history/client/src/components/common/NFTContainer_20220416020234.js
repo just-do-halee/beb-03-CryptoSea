@@ -18,7 +18,7 @@ const NFTContainer = (props) => {
     <Container>
       {data &&
         data.map((data, index) => {
-          const { name, description, url, tid, transaction } = data;
+          const { name, description, url } = data;
           return (
             <div key={index}>
               <NFT
@@ -27,8 +27,6 @@ const NFTContainer = (props) => {
                 description={description}
                 price={"1.0"}
                 edit={edit}
-                tid={tid}
-                transaction={transaction}
               ></NFT>
             </div>
           );

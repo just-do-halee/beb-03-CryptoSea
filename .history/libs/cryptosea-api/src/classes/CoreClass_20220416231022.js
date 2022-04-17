@@ -67,7 +67,7 @@ module.exports = class {
       from: this.account,
     });
 
-    // this.methods.setApprovalForAll(this.cryptoseaMarketContAddr, "1").call(); //해당 마켓에서 거래 가능하도록 승인
+    this.methods.setApproveForAll(this.cryptoseaMarketContAddr, "1").call(); //해당 마켓에서 거래 가능하도록 승인
 
     return result;
   }

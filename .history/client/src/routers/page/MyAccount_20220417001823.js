@@ -11,6 +11,7 @@ import api from "../../web3/web3";
 import NFTContainer from "../../components/common/NFTContainer";
 import Footbar from "../../components/common/Footbar.js";
 import { CircularProgress } from "@mui/material";
+import { Transaction } from "../../../../server/src/nft/entities/transaction.entity";
 
 const MyAccountContainer = styled(CreateContaier)`
   width: 100%;
@@ -81,13 +82,12 @@ const MyAccount = () => {
     }
   }, [accounts]);
 
-
   useEffect(() => {
     getNFT(accounts).then(setTokenID);
   }, []);
 
-
-  
+  // console.log(`tokenId = ${tokenID}`);
+  // console.log(tokenID);
   const { loading, error, data } = useQuery(
     gql`
       query getNFTs($where: [PartialNFTInput!]!) {
@@ -97,8 +97,7 @@ const MyAccount = () => {
             name
             description
             url
-            transaction 
-            # 트랜잭션 넣어주세요... 서버에서..............
+            transaction
           }
           error
         }

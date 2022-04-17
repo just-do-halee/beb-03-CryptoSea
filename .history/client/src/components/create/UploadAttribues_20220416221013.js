@@ -25,37 +25,9 @@ const UploadAttributes = () => {
       <h3>Attributes</h3>
       <p>Add a property to your nft.</p>
       {attributes.map((value, index) => {
-        if (index === 0) {
+        if (index === 0 || index === 1) {
           return (
             <div key={index}>
-              <h3 className="attributes-type">Category</h3>
-              <FlexContainer>
-                <StyleSelect
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Type"
-                  onChange={(e) => {
-                    dispatch(
-                      incrementAttributes({ atype: e.target.value, index })
-                    );
-                  }}
-                >
-                  <MenuItem value={"Category"}>Category</MenuItem>
-                </StyleSelect>
-                <StyledInput
-                  onChane={(e) =>
-                    dispatch(
-                      incrementAttributes({ avalue: e.target.value, index })
-                    )
-                  }
-                />
-              </FlexContainer>
-            </div>
-          );
-        } else if (index === 1) {
-          return (
-            <div key={index}>
-              <h3 className="attributes-type">Collection</h3>
               <FlexContainer>
                 <StyleSelect
                   labelId="demo-simple-select-label"
@@ -68,6 +40,7 @@ const UploadAttributes = () => {
                   }}
                 >
                   <MenuItem value={"Collection"}>Collection</MenuItem>
+                  <MenuItem value={"Category"}>Category</MenuItem>
                 </StyleSelect>
                 <StyledInput
                   onChane={(e) =>
@@ -82,11 +55,10 @@ const UploadAttributes = () => {
         } else {
           return (
             <div key={index}>
-              <h3 className="attributes-type">Properties</h3>
               <FlexContainer>
                 <StyleSelect
                   label="Type *"
-                  // value={"Type"}
+                  value={"Type"}
                   onChange={(e) =>
                     dispatch(
                       incrementAttributes({ atype: e.target.value, index })

@@ -80,16 +80,13 @@ const Explore = (props) => {
       ],
     },
   });
-  console.log(data);
   let nftArray;
   if (data) {
-    if (data.getNFTs.ok) {
+    if (data.getNFTs) {
       console.log(data.getNFTs.ok);
       nftArray = data.getNFTs.ok;
     }
   }
-
-  
   return (
     <ExploreConatainer>
       <h1>Explore Collection</h1>
