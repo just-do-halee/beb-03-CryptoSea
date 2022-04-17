@@ -27,6 +27,7 @@ const Container = styled(CreateContaier)`
     border: 3px dashed rgb(204, 204, 204);
     border-radius: 10px;
 
+
     input {
       cursor: pointer;
       box-sizing: border-box;
@@ -45,6 +46,7 @@ const Container = styled(CreateContaier)`
 
       color: rgb(204, 204, 204);
     } //input 수정해야함.
+
   }
 `;
 

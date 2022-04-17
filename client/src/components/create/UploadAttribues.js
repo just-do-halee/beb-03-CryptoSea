@@ -36,14 +36,18 @@ const UploadAttributes = () => {
                   label="Type"
                   onChange={(e) => {
                     dispatch(
-                      incrementAttributes({ atype: e.target.value, index })
+                      incrementAttributes({
+                        atype: "system",
+                        akey: e.target.value,
+                        index,
+                      })
                     );
                   }}
                 >
-                  <MenuItem value={"Category"}>Category</MenuItem>
+                  <MenuItem value="category">Category</MenuItem>
                 </StyleSelect>
                 <StyledInput
-                  onChane={(e) =>
+                  onChange={(e) =>
                     dispatch(
                       incrementAttributes({ avalue: e.target.value, index })
                     )
@@ -63,14 +67,18 @@ const UploadAttributes = () => {
                   label="Type"
                   onChange={(e) => {
                     dispatch(
-                      incrementAttributes({ atype: e.target.value, index })
+                      incrementAttributes({
+                        atype: "system",
+                        akey: e.target.value,
+                        index,
+                      })
                     );
                   }}
                 >
-                  <MenuItem value={"Collection"}>Collection</MenuItem>
+                  <MenuItem value="collection">Collection</MenuItem>
                 </StyleSelect>
                 <StyledInput
-                  onChane={(e) =>
+                  onChange={(e) =>
                     dispatch(
                       incrementAttributes({ avalue: e.target.value, index })
                     )
@@ -89,15 +97,19 @@ const UploadAttributes = () => {
                   // value={"Type"}
                   onChange={(e) =>
                     dispatch(
-                      incrementAttributes({ atype: e.target.value, index })
+                      incrementAttributes({
+                        atype: "plain",
+                        akey: e.target.value,
+                        index,
+                      })
                     )
                   }
                 >
-                  <MenuItem value={"Base"}>Base</MenuItem>
-                  <MenuItem value={"Eyes"}>Eyes</MenuItem>
-                  <MenuItem value={"Level"}>Level</MenuItem>
-                  <MenuItem value={"Stamina"}>Stamina</MenuItem>
-                  <MenuItem value={"Personality"}>Personality</MenuItem>
+                  <MenuItem value="Base">Base</MenuItem>
+                  <MenuItem value="Eyes">Eyes</MenuItem>
+                  <MenuItem value="Level">Level</MenuItem>
+                  <MenuItem value="Stamina">Stamina</MenuItem>
+                  <MenuItem value="Personality">Personality</MenuItem>
                 </StyleSelect>
 
                 <StyledInput
@@ -108,14 +120,14 @@ const UploadAttributes = () => {
                     )
                   }
                 />
-                <StyledInput
+                {/* <StyledInput
                   placeholder="Value"
                   onChange={(e) =>
                     dispatch(
                       incrementAttributes({ avalue: e.target.value, index })
                     )
                   }
-                />
+                /> */}
               </FlexContainer>
             </div>
           );
