@@ -1,20 +1,21 @@
 const Utils = require("../functions/utils");
 const ethers = require("ethers");
 const Web3 = require("web3");
-const erc721Abi = require("../erc721Abi");
-const erc721MarketAbi = require("../erc721MarketAbi");
+const erc721Abi = require("../../contracts/erc721Abi");
+const erc721MarketAbi = require("../../contracts/erc721MarketAbi");
 const gas = 2000000;
 
 module.exports = class {
   constructor(
     provider,
-    cryptoseaContAddr = "0xe69E98dB440D890E6eB63CdC4aa34d8eacCB66aE",
+    cryptoseaContAddr = "0x326FBA26a4c98f808f6b36505E5ACd9bE6eB5160",
     cryptoseaMarketContAddr = "0xeD31479352176C41F1284fc9F1C39DAE9211BAA8"
   ) {
     this.utils = Web3.utils;
     this.provider = provider;
     this.web3 = new Web3(provider);
     this.eth = this.web3.eth;
+    this.cryptoseaMarketContAddr = cryptoseaMarketContAddr;
     this.methods = new this.eth.Contract(erc721Abi, cryptoseaContAddr).methods;
     this.marketMethods = new this.eth.Contract(
       erc721MarketAbi,
@@ -65,9 +66,10 @@ module.exports = class {
   async mintNFT(tokenURI) {
     const result = await this.methods.mintNFT(this.account, tokenURI).send({
       from: this.account,
+      gas: 250000,
     });
 
-    this.methods.setApproveForAll(cryptoseaMarketContAddr, "1").call(); //해당 마켓에서 거래 가능하도록 승인
+    this.methods.setApprovalForAll(this.cryptoseaMarketContAddr, 1).call(); //해당 마켓에서 거래 가능하도록 승인
 
     return result;
   }
@@ -152,6 +154,12 @@ module.exports = class {
       .send();
 
     return result;
+  }
+
+  async getBlockNumber(tokenId) {
+    const blockNumber = await this.methods.getBlockNumber(tokenId).call();
+
+    return blockNumber;
   }
 
   decode(value, kind) {
