@@ -1,15 +1,10 @@
 import styled from "styled-components";
-
-// import Details from "./Details/Details.js"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Avatar, Button } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import StyledInput from "./common/StyledInput";
-
 import { useDispatch } from "react-redux";
-
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import getAccount from "../Controller/getAccount";
 import connectWallet from "../Controller/ConnectWallet";
 import disConnectWallet from "../Controller/disConnectWallet";
@@ -37,6 +32,10 @@ const NavbarContainer = styled.nav`
     justify-content: center;
 
   }
+  li {
+    font-weight: bold;
+  }
+
   ul {
     width: 400px;
     display: flex;
@@ -72,10 +71,21 @@ const Logo = styled.img.attrs({
 //NavBar 반응형 구현!!!!!
 
 const Navbar = (props) => {
-  const { setIsSearch, setSearchItem } = props;
+  // const { setIsSearch, setSearchItem, searchItem } = props;
   const dispatch = useDispatch();
+
   const [accounts, setAccounts] = useState("");
-  const { register, handleSubmit } = useForm();
+
+  const [keyword, setKeyword] = useState("");
+
+  const navigate = useNavigate();
+  const inputRef = useRef(null);
+
+  const searchHandler = () => {
+    if (inputRef.current) {
+      navigate(`/search/${inputRef.current.value}`)
+    }
+  }
 
   useEffect(() => {
     if (accounts === "") {
@@ -85,10 +95,6 @@ const Navbar = (props) => {
     }
   }, [accounts]);
 
-  const onSubmit = (data) => {
-    setIsSearch(true);
-    setSearchItem(data.search);
-  };
 
   return (
     <NavbarContainer>
@@ -96,16 +102,14 @@ const Navbar = (props) => {
       <Link to="/"><Logo /></Link>
 
       <div className="search-bar">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <SearchInput
-            type="search"
-
-            placeholder="Search items,collections,and accounts"
-            {...register("search")}
-
-          />
-          <Button type="submit">검색</Button>
-        </form>
+        <SearchInput
+          ref={inputRef}
+          type="search"
+          placeholder="Search items,collections,and accounts"
+          value={keyword}
+          onChange={({ target: { value } = {} }) => setKeyword(value)}
+        />
+        <Button onClick={searchHandler}>Search</Button>
       </div>
       <ul>
         <li>

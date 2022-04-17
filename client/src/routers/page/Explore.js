@@ -5,7 +5,7 @@ import NFTContainer from "../../components/common/NFTContainer";
 import { useEffect } from "react";
 import { gql } from "@apollo/client";
 import { useLazyQuery } from "@apollo/client";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Button } from "@mui/material";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -31,6 +31,7 @@ const ExploreConatainer = styled(Container)`
   display: flex;
   justify-content: center;
   align-items: center;
+
   h1 {
     font-size: 2rem;
     font-weight: bold;
@@ -43,16 +44,32 @@ const ExploreConatainer = styled(Container)`
     justify-content: center;
     align-items: center;
   }
+
+  ul {
+    display: flex;
+    justify-content: center;
+    margin-right: 40px;
+  }
+
+  li {
+    padding: 20px;
+  }
+
 `;
 
 const Explore = (props) => {
-  const [value, setValue] = useState("원피스");
-  const handleChange = (e) => {
-    setValue(e.target.value);
+  const [getData, setGetData] = useState("원피스");
+  const handleClick = (e) => {
+    console.log(e.target.value);
+    setGetData(e.target.value);
   };
   useEffect(() => {
     get();
-  }, [value]);
+  }, []);
+
+  useEffect(() => {
+    get();
+  }, [getData]);
 
   //!!! 쿼리 수정 요망
   const getNFT = gql`
@@ -63,58 +80,62 @@ const Explore = (props) => {
           name
           description
           url
+          transaction {
+            txhash
+          }
         }
         error
       }
     }
   `;
-  const [get, { loading, data }] = useLazyQuery(getNFT, {
+  
+  const [get, { loading, data, error }] = useLazyQuery(getNFT, {
     variables: {
       where: [
         {
           attributes: [
             {
-              akey: value,
+              atype: getData,
             },
           ],
         },
       ],
     },
   });
-  console.log(data);
+
   let nftArray;
   if (data) {
-    if (data.getNFTs.ok) {
-      console.log(data.getNFTs.ok);
-      nftArray = data.getNFTs.ok;
-    }
+    console.log(data);
+    // if (data.getNFTs.ok) {
+    //   console.log(data.getNFTs.ok);
+    //   nftArray = data.getNFTs.ok;
+    // }
   }
-
 
   return (
     <ExploreConatainer>
       <h1>Explore Collection</h1>
       <Box className="box" sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          <Tab label="Item One" />
-          <Tab label="Item Two" />
-          <Tab label="Item Three" />
-        </Tabs>
+
+        <ul>
+          <li>
+            <Button value="원피스" onClick={handleClick}>
+              ONEPIECE
+            </Button>
+          </li>
+          <li>
+            <Button value="나루토" onClick={handleClick}>
+              NARUTO
+            </Button>
+          </li>
+          <li>
+            <Button value="블리치">BLEACH</Button>
+          </li>
+        </ul>
       </Box>
-      <TabPanel value="원피스" index={0}>
-        원피스
-      </TabPanel>
-      <TabPanel value="컬렉션2" index={1}>
-        컬렉션2
-      </TabPanel>
-      <TabPanel value="컬렉션3" index={2}>
-        컬렉션3
-      </TabPanel>
-      {loading ? <NFTContainer data={nftArray} /> : <CircularProgress />}
+
+      {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
+
     </ExploreConatainer>
   );
 };

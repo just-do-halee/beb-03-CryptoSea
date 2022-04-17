@@ -4,12 +4,15 @@ import { create } from "ipfs-http-client";
 import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
-import UploadImg from '../../components/create/UploadImg';
-import UploadName from '../../components/create/UploadName';
-import UploadAttributes from '../../components/create/UploadAttribues';
-import Footbar from '../../components/common/Footbar';
-import UploadDescription from '../../components/create/UploadDescription';
-import api from '../../web3/web3';
+
+import UploadDescription from "../../components/create/UploadDescription";
+import UploadImg from "../../components/create/UploadImg";
+import UploadName from "../../components/create/UploadName";
+
+import UploadAttributes from "../../components/create/UploadAttribues";
+import api from "../../web3/web3";
+import Footbar from "../../components/common/Footbar";
+
 
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
@@ -132,17 +135,7 @@ const CreatePage = () => {
       window.alert("민팅 중입니다! 잠시만 기다려주세요!");
       const hash = result.transactionHash.slice(2);
       console.log(`transactionHash = ${hash}`);
-      const response = await getData({
-        variables: {
-          hash,
-        },
-      });
-      console.log(response);
-      if (response.data.cacheNFT.ok.url !== "") {
-        window.alert("NFT 발행완료");
-      } else {
-        window.alert("민팅에 실패했습니다.");
-      }
+
     } catch (err) {
       console.log(err);
     }

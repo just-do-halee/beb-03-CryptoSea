@@ -16,6 +16,7 @@ const Container = styled.section`
     width: 100px;
     margin: 0 auto 50px;
     font-size: 2rem;
+    font-weight: bold;
   }
   @media screen and (max-width: 1200px) {
     margin-top: 100px;
