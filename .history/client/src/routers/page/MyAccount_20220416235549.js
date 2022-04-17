@@ -59,7 +59,7 @@ const MyAccountContainer = styled(CreateContaier)`
 const getNFT = async (account) => {
   try {
     let nftList = await api.listUserNFTs(account);
-    // console.log(nftList); //["3","5"]
+    console.log(nftList); //["3","5"]
     nftList = nftList.map((nft) => {
       return { tid: Number(nft) };
     });
@@ -81,13 +81,12 @@ const MyAccount = () => {
     }
   }, [accounts]);
 
-
   useEffect(() => {
     getNFT(accounts).then(setTokenID);
   }, []);
 
+  // console.log(`tokenId = ${tokenID}`);
 
-  
   const { loading, error, data } = useQuery(
     gql`
       query getNFTs($where: [PartialNFTInput!]!) {
@@ -97,8 +96,6 @@ const MyAccount = () => {
             name
             description
             url
-            transaction 
-            # 트랜잭션 넣어주세요... 서버에서..............
           }
           error
         }
@@ -110,10 +107,11 @@ const MyAccount = () => {
   );
 
   let nftArray;
-
+  let tid;
   if (data) {
     const { getNFTs: { ok } = {} } = data;
     nftArray = ok;
+    console.log(nftArray.ok);
   }
   if (error) {
     navigate("/");

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const CreateContaier = styled.div`
   display: flex;
@@ -15,9 +15,6 @@ const CreateContaier = styled.div`
   }
   span {
     color: red;
-  }
-  .attributes-type {
-    font-size: 1.5rem;
   }
 `;
 

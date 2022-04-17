@@ -155,14 +155,14 @@ const NFT = (props) => {
   //   // 가격정보 변경
   // };
 
-  // const readPrice = async (transaction) => {
-  //   const result = await api.getTransactionReceipt(transaction);
-  //   const price = await api.decoded(result.logs[2].data, "price").price;
-  //   return price;
-  // };
-  // useEffect(() => {
-  //   readPrice(transaction).then(setPrice);
-  // }, []);
+  const readPrice = async (transaction) => {
+    const result = await api.getTransactionReceipt(transaction);
+    const price = await api.decoded(result.logs[2].data, "price").price;
+    return price;
+  };
+  useEffect(() => {
+    readPrice(transaction).then(setPrice);
+  }, []);
 
   return (
     <NFTContainer>

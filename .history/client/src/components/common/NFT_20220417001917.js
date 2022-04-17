@@ -148,12 +148,12 @@ const NFT = (props) => {
   const [price, setPrice] = useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // console.log(transaction);
-  // console.log(transaction);
+
+  console.log(transaction);
   // 트랜잭션이 안받아와짐...... 서버 문제?
-  // const changePrice = () => {
-  //   // 가격정보 변경
-  // };
+  const changePrice = () => {
+    // 가격정보 변경
+  };
 
   // const readPrice = async (transaction) => {
   //   const result = await api.getTransactionReceipt(transaction);

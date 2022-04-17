@@ -52,8 +52,6 @@ const Explore = (props) => {
   useEffect(() => {
     get();
   }, [value]);
-
-  //!!! 쿼리 수정 요망
   const getNFT = gql`
     query getNFTs($where: [PartialNFTInput!]!) {
       getNFTs(where: $where) {
@@ -69,27 +67,10 @@ const Explore = (props) => {
   `;
   const [get, { loading, data }] = useLazyQuery(getNFT, {
     variables: {
-      where: [
-        {
-          attributes: [
-            {
-              akey: value,
-            },
-          ],
-        },
-      ],
+      where: value,
     },
   });
-  console.log(data);
-  let nftArray;
-  if (data) {
-    if (data.getNFTs.ok) {
-      console.log(data.getNFTs.ok);
-      nftArray = data.getNFTs.ok;
-    }
-  }
 
-  
   return (
     <ExploreConatainer>
       <h1>Explore Collection</h1>
@@ -104,16 +85,16 @@ const Explore = (props) => {
           <Tab label="Item Three" />
         </Tabs>
       </Box>
-      <TabPanel value="원피스" index={0}>
-        원피스
+      <TabPanel value={value} index={0}>
+        ???
       </TabPanel>
-      <TabPanel value="컬렉션2" index={1}>
-        컬렉션2
+      <TabPanel value={value} index={1}>
+        ???
       </TabPanel>
-      <TabPanel value="컬렉션3" index={2}>
-        컬렉션3
+      <TabPanel value={value} index={2}>
+        ???
       </TabPanel>
-      {loading ? <NFTContainer data={nftArray} /> : <CircularProgress />}
+      {loading ? <NFTContainer /> : <CircularProgress />}
     </ExploreConatainer>
   );
 };

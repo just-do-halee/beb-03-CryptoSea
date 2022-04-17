@@ -28,7 +28,7 @@ const NFTContainer = (props) => {
                 price={"1.0"}
                 edit={edit}
                 tid={tid}
-                transaction={transaction}
+                // transaction={transaction}
               ></NFT>
             </div>
           );

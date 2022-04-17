@@ -1,8 +1,7 @@
 import FlexContainer from "./FlexContainer";
 import styled from "styled-components";
 import { Box, Typography, Modal, Button } from "@mui/material";
-import { useState, useEffect } from "react";
-import api from "../../web3/web3";
+import { useState } from "react";
 
 const NFTContainer = styled(FlexContainer)`
   flex-direction: column;
@@ -143,27 +142,13 @@ const style = {
 };
 
 const NFT = (props) => {
-  const { image, name, description, buy, edit, tid, transaction } = props;
   const [open, setOpen] = useState(false);
-  const [price, setPrice] = useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // console.log(transaction);
-  // console.log(transaction);
-  // 트랜잭션이 안받아와짐...... 서버 문제?
-  // const changePrice = () => {
-  //   // 가격정보 변경
-  // };
-
-  // const readPrice = async (transaction) => {
-  //   const result = await api.getTransactionReceipt(transaction);
-  //   const price = await api.decoded(result.logs[2].data, "price").price;
-  //   return price;
-  // };
-  // useEffect(() => {
-  //   readPrice(transaction).then(setPrice);
-  // }, []);
-
+  const { image, name, description, price, buy, edit } = props;
+  const changePrice = () => {
+    // 가격정보 변경
+  };
   return (
     <NFTContainer>
       <ImageBox>
@@ -179,8 +164,7 @@ const NFT = (props) => {
               src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"
               alt=""
             />
-            {/* <span onClick={edit && changePrice}>{price}</span> */}
-            {/* //가격바꿀수있게 해줘야함. */}
+            <span onClick={edit && changePrice}>{price}</span>
           </div>
         </div>
       </ContentBox>

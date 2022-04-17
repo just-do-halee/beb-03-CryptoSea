@@ -81,13 +81,12 @@ const MyAccount = () => {
     }
   }, [accounts]);
 
-
   useEffect(() => {
     getNFT(accounts).then(setTokenID);
   }, []);
 
-
-  
+  // console.log(`tokenId = ${tokenID}`);
+  // console.log(tokenID);
   const { loading, error, data } = useQuery(
     gql`
       query getNFTs($where: [PartialNFTInput!]!) {
@@ -97,8 +96,7 @@ const MyAccount = () => {
             name
             description
             url
-            transaction 
-            # 트랜잭션 넣어주세요... 서버에서..............
+            transaction
           }
           error
         }
@@ -118,7 +116,7 @@ const MyAccount = () => {
   if (error) {
     navigate("/");
   }
-
+  console.log(nftArray);
   return (
     <>
       {loading ? (

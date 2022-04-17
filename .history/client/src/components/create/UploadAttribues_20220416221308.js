@@ -28,8 +28,8 @@ const UploadAttributes = () => {
         if (index === 0) {
           return (
             <div key={index}>
-              <h3 className="attributes-type">Category</h3>
               <FlexContainer>
+                <h3>Category</h3>
                 <StyleSelect
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -55,8 +55,8 @@ const UploadAttributes = () => {
         } else if (index === 1) {
           return (
             <div key={index}>
-              <h3 className="attributes-type">Collection</h3>
               <FlexContainer>
+                <h3>Category</h3>
                 <StyleSelect
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -68,6 +68,7 @@ const UploadAttributes = () => {
                   }}
                 >
                   <MenuItem value={"Collection"}>Collection</MenuItem>
+                  <MenuItem value={"Category"}>Category</MenuItem>
                 </StyleSelect>
                 <StyledInput
                   onChane={(e) =>
@@ -82,11 +83,10 @@ const UploadAttributes = () => {
         } else {
           return (
             <div key={index}>
-              <h3 className="attributes-type">Properties</h3>
               <FlexContainer>
                 <StyleSelect
                   label="Type *"
-                  // value={"Type"}
+                  value={"Type"}
                   onChange={(e) =>
                     dispatch(
                       incrementAttributes({ atype: e.target.value, index })

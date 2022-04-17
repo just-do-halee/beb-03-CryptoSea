@@ -148,21 +148,20 @@ const NFT = (props) => {
   const [price, setPrice] = useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // console.log(transaction);
-  // console.log(transaction);
-  // 트랜잭션이 안받아와짐...... 서버 문제?
-  // const changePrice = () => {
-  //   // 가격정보 변경
-  // };
 
-  // const readPrice = async (transaction) => {
-  //   const result = await api.getTransactionReceipt(transaction);
-  //   const price = await api.decoded(result.logs[2].data, "price").price;
-  //   return price;
-  // };
-  // useEffect(() => {
-  //   readPrice(transaction).then(setPrice);
-  // }, []);
+  console.log(tid);
+  const changePrice = () => {
+    // 가격정보 변경
+  };
+
+  const readPrice = async (transaction) => {
+    const result = await api.getTransactionReceipt(transaction);
+    const price = await api.decoded(result.logs[2].data, "price").price;
+    return price;
+  };
+  useEffect(() => {
+    setPrice(readPrice(transaction));
+  }, []);
 
   return (
     <NFTContainer>
@@ -179,8 +178,7 @@ const NFT = (props) => {
               src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"
               alt=""
             />
-            {/* <span onClick={edit && changePrice}>{price}</span> */}
-            {/* //가격바꿀수있게 해줘야함. */}
+            <span onClick={edit && changePrice}>{readPrice()}</span>
           </div>
         </div>
       </ContentBox>
