@@ -82,7 +82,8 @@ export class Metadata extends CoreEntity {
   @Field(() => [MetaAttribute], {
     nullable: true,
   })
-  @IsMetaAttributes()
+  // @IsMetaAttributes()
+  @ValidateNested({ each: true })
   @ManyToMany(
     () => MetaAttribute,
     (attribute: MetaAttribute) => attribute.metadata,

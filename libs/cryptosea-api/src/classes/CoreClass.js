@@ -1,15 +1,15 @@
-const Utils = require("../functions/utils");
-const ethers = require("ethers");
-const Web3 = require("web3");
-const erc721Abi = require("../../contracts/erc721Abi");
-const erc721MarketAbi = require("../../contracts/erc721MarketAbi");
+const Utils = require('../functions/utils');
+const ethers = require('ethers');
+const Web3 = require('web3');
+const erc721Abi = require('../../contracts/erc721Abi');
+const erc721MarketAbi = require('../../contracts/erc721MarketAbi');
 const gas = 2000000;
 
 module.exports = class {
   constructor(
     provider,
-    cryptoseaContAddr = "0x326FBA26a4c98f808f6b36505E5ACd9bE6eB5160",
-    cryptoseaMarketContAddr = "0xeD31479352176C41F1284fc9F1C39DAE9211BAA8"
+    cryptoseaContAddr = '0xEc4B4A77A7DC63B1941c1063C6F25D05170deEb6',
+    cryptoseaMarketContAddr = '0x76497E8c6BCf075C4f6408a1428565fb76141E74'
   ) {
     this.utils = Web3.utils;
     this.provider = provider;
@@ -102,20 +102,12 @@ module.exports = class {
 
     const { input } = tx;
 
-    if (typeof input !== "string" || input === "0x" || input === "") {
+    if (typeof input !== 'string' || input === '0x' || input === '') {
       tx.input = {};
       return tx;
     }
 
-    let removed = `0x${input.slice(10)}`;
-
-    const result = this.eth.abi.decodeParameters(
-      [
-        { type: "address", name: "recipient" },
-        { type: "string", name: "tokenURI" },
-      ],
-      removed
-    );
+    const result = this.decode(removed, 'tokenURI');
 
     tx.input = result;
     return tx;
@@ -136,7 +128,7 @@ module.exports = class {
 
   //price 변환
   parseUnits(price) {
-    const result = ethers.utils.parseUnits(price.toString(), "ether");
+    const result = ethers.utils.parseUnits(price.toString(), 'ether');
 
     return result;
   }
@@ -163,22 +155,23 @@ module.exports = class {
   }
 
   decode(value, kind) {
+    if (typeof value !== 'string') throw new Error(`${value} is not valid`);
     switch (kind) {
-      case "tokenURI":
+      case 'tokenURI':
         return this.eth.abi.decodeParameters(
           [
-            { type: "address", name: "recipient" },
-            { type: "string", name: "tokenURI" },
+            { type: 'address', name: 'recipient' },
+            { type: 'string', name: 'tokenURI' },
           ],
-          value
+          '0x' + value.slice(10)
         );
-      case "price":
+      case 'price':
         return this.eth.abi.decodeParameters(
           [
-            { type: "address", name: "seller" },
-            { type: "address", name: "owner" },
-            { type: "uint256", name: "price" },
-            { type: "bool", name: "sold" },
+            { type: 'address', name: 'seller' },
+            { type: 'address', name: 'owner' },
+            { type: 'uint256', name: 'price' },
+            { type: 'bool', name: 'sold' },
           ],
           value
         );
