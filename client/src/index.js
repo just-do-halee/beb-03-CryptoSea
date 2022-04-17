@@ -12,12 +12,12 @@ import { createHttpLink } from "@apollo/client";
 import { InMemoryCache } from "@apollo/client";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const httpLink = createHttpLink({
-  uri: "https://b9b5-125-188-189-116.ngrok.io/graphql",
+  uri: "https://9957-125-188-189-116.ngrok.io/graphql",
 });
 
 export const client = new ApolloClient({
   link: httpLink,
-  cache: new InMemoryCache(), 
+  cache: new InMemoryCache(),
 });
 
 root.render(

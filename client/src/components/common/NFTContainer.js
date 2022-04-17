@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import FlexContainer from "./FlexContainer.js";
 import NFT from "./NFT.js";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled(FlexContainer)`
   width: 1000px;
@@ -12,7 +13,9 @@ const Container = styled(FlexContainer)`
 `;
 
 const NFTContainer = (props) => {
+  const navigate = useNavigate()
   const { data, edit } = props;
+
 
   return (
     <Container>
@@ -20,20 +23,22 @@ const NFTContainer = (props) => {
         data.map((data, index) => {
           const { name, description, url, tid, transaction } = data;
           return (
-            <div key={index}>
+            <div key={index} onClick={() => {
+              navigate(`/detail/${tid}`)
+            }}>
               <NFT
                 name={name}
                 image={url}
                 description={description}
-                price={"1.0"}
                 edit={edit}
                 tid={tid}
                 transaction={transaction}
-              ></NFT>
+              >
+              </NFT>
             </div>
           );
         })}
-    </Container>
+    </Container >
   );
 };
 
