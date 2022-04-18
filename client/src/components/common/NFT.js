@@ -150,7 +150,7 @@ const NFT = (props) => {
   const handleClose = () => setOpen(false);
 
   const readPrice = async (transaction) => {
-    // 미틴할 때 가격 설정을 하면 백엔드 측에서 txhash를 저장해 그걸 불러오는 건 가능하지만
+    // 민팅할 때 가격 설정을 하면 백엔드 측에서 txhash를 저장해 그걸 불러오는 건 가능하지만
     // 민팅 후 가격을 수시로 바꿀 시마다 트랜잭션을 저장하지는 않기에 이것을 txhash만으로 처리할 수는 없음
     // 고로 NFTMarket 솔리디티 스마트컨트랙트 내에서 리스팅할 시 맨 마지막 줄에 토큰아이디로
     // 리스팅 가격을 저장 및 불러오는 작업을 해야함
@@ -213,7 +213,7 @@ const NFT = (props) => {
           <div className="description">{description}</div>
         )}
       </FooterBox>
-    </NFTContainer >
+    </NFTContainer>
   );
 };
 

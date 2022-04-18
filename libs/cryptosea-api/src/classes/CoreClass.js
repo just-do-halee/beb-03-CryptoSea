@@ -1,20 +1,21 @@
-const Utils = require('../functions/utils');
-const ethers = require('ethers');
-const Web3 = require('web3');
-const erc721Abi = require('../../contracts/erc721Abi');
-const erc721MarketAbi = require('../../contracts/erc721MarketAbi');
-const gas = 2000000;
+const Utils = require("../functions/utils");
+const ethers = require("ethers");
+const Web3 = require("web3");
+const erc721Abi = require("../../contracts/erc721Abi");
+const erc721MarketAbi = require("../../contracts/erc721MarketAbi");
+const gas = 2500000;
 
 module.exports = class {
   constructor(
     provider,
-    cryptoseaContAddr = '0xEc4B4A77A7DC63B1941c1063C6F25D05170deEb6',
-    cryptoseaMarketContAddr = '0x0EB75bF1c272790d4A38E569EBC7c4cD8faf36A8'
+    cryptoseaContAddr = "0x7977C027aBE0008703DD12f406f85a30387099EA",
+    cryptoseaMarketContAddr = "0xBECF211ffaAd99250cb7795238d41E5364b3B95e"
   ) {
     this.utils = Web3.utils;
     this.provider = provider;
     this.web3 = new Web3(provider);
     this.eth = this.web3.eth;
+    this.cryptoseaContAddr = cryptoseaContAddr;
     this.cryptoseaMarketContAddr = cryptoseaMarketContAddr;
     this.methods = new this.eth.Contract(erc721Abi, cryptoseaContAddr).methods;
     this.marketMethods = new this.eth.Contract(
@@ -66,10 +67,13 @@ module.exports = class {
   async mintNFT(tokenURI) {
     const result = await this.methods.mintNFT(this.account, tokenURI).send({
       from: this.account,
-      gas: 250000,
+      gas,
     });
 
-    this.methods.setApprovalForAll(this.cryptoseaMarketContAddr, 1).call(); //해당 마켓에서 거래 가능하도록 승인
+    await this.methods.setApprovalForAll(this.cryptoseaMarketContAddr, 1).send({
+      from: this.account,
+      gas,
+    }); //해당 마켓에서 거래 가능하도록 승인
 
     return result;
   }
@@ -102,12 +106,12 @@ module.exports = class {
 
     const { input } = tx;
 
-    if (typeof input !== 'string' || input === '0x' || input === '') {
+    if (typeof input !== "string" || input === "0x" || input === "") {
       tx.input = {};
       return tx;
     }
 
-    const result = this.decode(removed, 'tokenURI');
+    const result = this.decode(removed, "tokenURI");
 
     tx.input = result;
     return tx;
@@ -119,28 +123,38 @@ module.exports = class {
 
   //price 변환
   parseUnits(price) {
-    const result = ethers.utils.parseUnits(price.toString(), 'ether');
+    const result = ethers.utils.parseUnits(price.toString(), "ether");
 
     return result;
   }
 
   //NFT민트후에 마켓에 아이템 생성 (이벤트로 트랜잭션 로그에 기록 남겨주는 방식)
-  async createMarketItem(tokenId, price, listingPrice) {
+  async createMarketItem(tokenId, account, price) {
+    const listingPrice = await this.getListingPrice();
+    console.log(this.cryptoseaContAddr, account);
     const result = await this.marketMethods
-      .createMarketItem(cryptoseaContAddr, tokenId, price)
-      .send({ from: this.account, value: listingPrice, gas: gas });
+      .createMarketItem(this.cryptoseaContAddr, tokenId, price)
+      .send({ from: account, value: listingPrice, gas: gas });
 
     return result;
   }
 
   async getItemIdFromTokenId(tokenid) {
-    if (typeof tokenid !== 'number') return {};
-    return this.marketMethods.getItemIdFromTokenId(tokenid);
+    if (typeof tokenid !== "number") return {};
+    return this.marketMethods.getItemIdFromTokenId(tokenid).call();
   }
 
   async getMarketItemFromTokenId(tokenid) {
-    if (typeof tokenid !== 'number') return {};
-    return this.marketMethods.getMarketItemFromTokenId(tokenid);
+    if (typeof tokenid !== "number") return {};
+    return this.marketMethods.getMarketItemFromTokenId(tokenid).call();
+  }
+
+  async setPrice(tokenid, price, account = this.account) {
+    if (typeof tokenid !== "number") return {};
+    return this.marketMethods.setPrice(tokenid, price).send({
+      from: account,
+      gas,
+    });
   }
 
   //리스팅 비용 받아오기
@@ -152,7 +166,7 @@ module.exports = class {
   //NFT구입
   async createMarketSale(tokenId, { value: price }) {
     const result = await this.marketMethods
-      .createMarketSale(cryptoseaContAddr, tokenId, { value: price })
+      .createMarketSale(this.cryptoseaContAddr, tokenId, { value: price })
       .send();
 
     return result;
@@ -165,23 +179,23 @@ module.exports = class {
   }
 
   decode(value, kind) {
-    if (typeof value !== 'string') throw new Error(`${value} is not valid`);
+    if (typeof value !== "string") throw new Error(`${value} is not valid`);
     switch (kind) {
-      case 'tokenURI':
+      case "tokenURI":
         return this.eth.abi.decodeParameters(
           [
-            { type: 'address', name: 'recipient' },
-            { type: 'string', name: 'tokenURI' },
+            { type: "address", name: "recipient" },
+            { type: "string", name: "tokenURI" },
           ],
-          '0x' + value.slice(10)
+          "0x" + value.slice(10)
         );
-      case 'price':
+      case "price":
         return this.eth.abi.decodeParameters(
           [
-            { type: 'address', name: 'seller' },
-            { type: 'address', name: 'owner' },
-            { type: 'uint256', name: 'price' },
-            { type: 'bool', name: 'sold' },
+            { type: "address", name: "seller" },
+            { type: "address", name: "owner" },
+            { type: "uint256", name: "price" },
+            { type: "bool", name: "sold" },
           ],
           value
         );

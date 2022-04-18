@@ -10,21 +10,19 @@ export const nftSlice = createSlice({
   },
   reducers: {
     incrementName: (state, action) => {
-      state.name = action.payload.trim();
+      state.name = action.payload;
     },
     incrementImgFile: (state, action) => {
       // console.log(action.payload);
-      state.image = action.payload.trim();
+      state.image = action.payload;
     },
     incrementLink: (state, action) => {
-      state.link = action.payload.trim();
+      state.link = action.payload;
     },
     incrementDescription: (state, action) => {
-      state.description = action.payload.trim();
+      state.description = action.payload;
     },
     incrementAttributes: (state, action) => {
-      // console.log(action);
-
       if (action.payload === "plus") {
         state.attributes = [
           ...state.attributes,
@@ -32,9 +30,7 @@ export const nftSlice = createSlice({
         ];
       }
       const { atype, akey, avalue, index } = action.payload;
-      if(index === undefined){
-        
-      }
+
       if (atype !== undefined) {
         state.attributes[index].atype = atype;
       }
