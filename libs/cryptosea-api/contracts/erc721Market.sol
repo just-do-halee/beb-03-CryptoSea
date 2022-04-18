@@ -47,6 +47,19 @@ contract NFTMarket is ReentrancyGuard {
         bool sold
     );
 
+    function setPrice(uint itemId, uint256 price) public returns (bool) {
+        MarketItem storage item = idMarketItem[itemId];
+        require(
+            (item.seller == payable(msg.sender)) &&
+            (item.owner == payable(address(0))) &&
+            (item.sold == false),
+            "Faild to set the price..."
+        );
+
+        item.price = price;
+        return true;
+    }
+
     function getItemIdFromTokenId(uint tokenId) public view returns (uint itemId) {
         itemId = itemRecorder[tokenId];
     }
@@ -73,7 +86,7 @@ contract NFTMarket is ReentrancyGuard {
         uint256 tokenId,
         uint256 price) public payable nonReentrant{
          require(price > 0, "Price must be above zero");
-         require(msg.value == listingPrice, "Price must be equal to listing price");
+        //  require(msg.value == listingPrice, "Price must be equal to listing price");
 
          _itemIds.increment(); //add 1 to the total number of items ever created
          uint256 itemId = _itemIds.current();
@@ -114,7 +127,7 @@ contract NFTMarket is ReentrancyGuard {
                 uint price = idMarketItem[itemId].price;
                 uint tokenId = idMarketItem[itemId].tokenId;
 
-                require(msg.value == price, "Please submit the asking price in order to complete purchase");
+                // require(msg.value == price, "Please submit the asking price in order to complete purchase");
 
            //pay the seller the amount
            idMarketItem[itemId].seller.transfer(msg.value);
