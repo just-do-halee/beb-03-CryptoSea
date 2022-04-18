@@ -18,10 +18,7 @@ import { setAsyncInterval } from 'src/common/functions/core.function';
 import { CID } from 'multiformats/cid';
 import { validateOrReject } from 'class-validator';
 import { NFTModuleOptions } from './nft.interface';
-import {
-  attachExt,
-  amazonS3URL,
-} from 'src/common/functions/file.function';
+import { attachExt, amazonS3URL } from 'src/common/functions/file.function';
 import { Readable } from 'typeorm/platform/PlatformTools';
 import { Web3Service } from 'src/web3/web3.service';
 import { MfsService } from 'src/mfs/mfs.service';
@@ -197,7 +194,7 @@ export class NFTService {
     const txInfo = await this.web3.getTransaction(txhash);
 
     if (typeof txInfo !== 'object') return Err(`invalid transaction hash`);
-
+    // TODO! validate tx
     const { blockNumber, to, input } = txInfo;
     if (
       typeof blockNumber !== 'number' ||
