@@ -30,7 +30,6 @@ const NavbarContainer = styled.nav`
     width: 600px;
     display: flex;
     justify-content: center;
-
   }
   li {
     font-weight: bold;
@@ -46,11 +45,10 @@ const NavbarContainer = styled.nav`
     justify-content: space-between;
   }
 
-
   li {
     font-size: 17px;
     font-weight: bold;
-
+  }
   .log-out {
     cursor: pointer;
   }
@@ -60,6 +58,7 @@ const SearchInput = styled(StyledInput)`
   width: 500px;
   font-size: 15px;
 `;
+
 const Logo = styled.img.attrs({
   src: "https://media.discordapp.net/attachments/961785188399087616/963737072219349003/logo-removebg-preview_1.png",
 })`
@@ -83,9 +82,9 @@ const Navbar = (props) => {
 
   const searchHandler = () => {
     if (inputRef.current) {
-      navigate(`/search/${inputRef.current.value}`)
+      navigate(`/search/${inputRef.current.value}`);
     }
-  }
+  };
 
   useEffect(() => {
     if (accounts === "") {
@@ -95,11 +94,11 @@ const Navbar = (props) => {
     }
   }, [accounts]);
 
-
   return (
     <NavbarContainer>
-
-      <Link to="/"><Logo /></Link>
+      <Link to="/">
+        <Logo />
+      </Link>
 
       <div className="search-bar">
         <SearchInput
@@ -143,8 +142,8 @@ const Navbar = (props) => {
             </div>
           )}
         </li>
-      </ul >
-    </NavbarContainer >
+      </ul>
+    </NavbarContainer>
   );
 };
 

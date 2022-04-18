@@ -54,11 +54,10 @@ const ExploreConatainer = styled(Container)`
   li {
     padding: 20px;
   }
-
 `;
 
 const Explore = (props) => {
-  const [getData, setGetData] = useState("원피스");
+  const [getData, setGetData] = useState("ONEPIECE");
   const handleClick = (e) => {
     console.log(e.target.value);
     setGetData(e.target.value);
@@ -88,7 +87,7 @@ const Explore = (props) => {
       }
     }
   `;
-  
+
   const [get, { loading, data, error }] = useLazyQuery(getNFT, {
     variables: {
       where: [
@@ -106,17 +105,16 @@ const Explore = (props) => {
   let nftArray;
   if (data) {
     console.log(data);
-    // if (data.getNFTs.ok) {
-    //   console.log(data.getNFTs.ok);
-    //   nftArray = data.getNFTs.ok;
-    // }
+    if (data.getNFTs.ok) {
+      console.log(data.getNFTs.ok);
+      nftArray = data.getNFTs.ok;
+    }
   }
 
   return (
     <ExploreConatainer>
       <h1>Explore Collection</h1>
       <Box className="box" sx={{ borderBottom: 1, borderColor: "divider" }}>
-
         <ul>
           <li>
             <Button value="원피스" onClick={handleClick}>
@@ -135,7 +133,6 @@ const Explore = (props) => {
       </Box>
 
       {loading ? <CircularProgress /> : <NFTContainer data={nftArray} />}
-
     </ExploreConatainer>
   );
 };
