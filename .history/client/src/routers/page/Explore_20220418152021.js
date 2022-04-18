@@ -113,24 +113,21 @@ const Explore = (props) => {
 
   return (
     <ExploreConatainer>
-      <h1>Explore Category</h1>
+      <h1>Explore Collection</h1>
       <Box className="box" sx={{ borderBottom: 1, borderColor: "divider" }}>
         <ul>
           <li>
-            <Button value="art" onClick={handleClick}>
-              Art
+            <Button value="원피스" onClick={handleClick}>
+              ONEPIECE
             </Button>
           </li>
           <li>
-            <Button value="photography" onClick={handleClick}>
-              PhotoGrapy
+            <Button value="나루토" onClick={handleClick}>
+              NARUTO
             </Button>
           </li>
           <li>
-            <Button value="collectibles">Collectibles</Button>
-          </li>
-          <li>
-            <Button value="Sports">Sports</Button>
+            <Button value="블리치">BLEACH</Button>
           </li>
         </ul>
       </Box>
