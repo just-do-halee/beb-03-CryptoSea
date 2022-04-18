@@ -1,10 +1,11 @@
-import styled from 'styled-components';
-import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import styled from "styled-components";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 const Container = styled.section`
   /* background-color: skyblue; */
-  /* width: 1500px; */
+  width: 1300px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -33,16 +34,22 @@ const LeftBox = styled.div`
   /* border: 1px solid black; */
 
   h2 {
+    margin-left: 70px;
+    margin-bottom: 30px;
     width: 500px;
     font-size: 3rem;
+    font-weight: bold;
   }
+
   p {
+    margin-left: 70px;
     width: 350px;
     font-size: 1.5rem;
   }
   Button {
     width: 200px;
     height: 50px;
+    margin-left: 70px;
     margin-right: 30px;
     margin-top: 50px;
     border-radius: 15px;
@@ -53,8 +60,11 @@ const LeftBox = styled.div`
 `;
 
 const RightBox = styled.div`
+  
   width: 500px;
-  height: 600px;
+  height: 500px;
+  margin-top: 30px;
+  margin-right: 30px;
   /* background-color: orange; */
 
   cursor: pointer;
@@ -74,7 +84,9 @@ const Section = () => {
           <h2>Discover, collect, and sell extraordinary NFTs</h2>
           <p>OpenSea is the world's first and largest NFT marketplace</p>
           <div>
-            <Button variant="contained">Explore</Button>
+            <Button variant="contained">
+              <Link to="/explore">Explore</Link>
+            </Button>
             {/* 링크걸기 */}
             <Button variant="outlined">
               <Link to="/create"> Create</Link>
@@ -86,7 +98,7 @@ const Section = () => {
           <img
             src="https://lh3.googleusercontent.com/uMYGSBdEi-kLG7_z2dfOoGQYRFdU9_Dw0LSwzsG94MCGnuQawRw9rG-mMpBHY65we-ugoiD80NCiDzK8DI7TjfOWcHKJRqUrhbIQnxk=s550"
             alt="zz"
-          />{' '}
+          />{" "}
           {/* 이미지 받아와야함. */}
           <div className="userInfo"> {/* 난중에 수정 */}</div>
         </RightBox>

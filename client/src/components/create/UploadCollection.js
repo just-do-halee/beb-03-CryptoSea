@@ -8,6 +8,7 @@ import { FaPlus } from 'react-icons/fa';
 import CreateContaier from '../common/CreateContainer.js';
 import CollectionModal from './CollectionModal.js';
 import collectionMenu from '../../data/collectionMenu.js';
+
 const Item = styled.div`
   display: flex;
   flex-direction: row;

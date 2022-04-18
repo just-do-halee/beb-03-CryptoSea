@@ -1,3 +1,3 @@
-# CryptoSea
+# CryptoSea Backend
 
-NFT Project 
+NestJS + GraphQL + Amazon S3 + IPFS
