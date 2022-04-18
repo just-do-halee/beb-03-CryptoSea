@@ -23,6 +23,8 @@ export const nftSlice = createSlice({
       state.description = action.payload;
     },
     incrementAttributes: (state, action) => {
+      // console.log(action);
+
       if (action.payload === "plus") {
         state.attributes = [
           ...state.attributes,
