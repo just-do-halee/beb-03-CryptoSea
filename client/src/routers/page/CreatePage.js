@@ -13,7 +13,6 @@ import UploadAttributes from "../../components/create/UploadAttribues";
 import api from "../../web3/web3";
 import Footbar from "../../components/common/Footbar";
 
-
 // 각 컴포넌트 안에서 받아온 데이터를 redux 로 상태저장하고 그걸 보내줌.
 
 const Container = styled.section`
@@ -132,10 +131,10 @@ const CreatePage = () => {
   const sendTransaction = async (metaCid) => {
     try {
       const result = await api.mintNFT(metaCid);
-      window.alert("민팅 중입니다! 잠시만 기다려주세요!");
+
       const hash = result.transactionHash.slice(2);
       console.log(`transactionHash = ${hash}`);
-
+      window.alert("민팅 완료!");
     } catch (err) {
       console.log(err);
     }
@@ -151,7 +150,6 @@ const CreatePage = () => {
         <UploadImg />
         <UploadName />
         <UploadDescription />
-        {/* <UploadCategory /> */}
         <UploadAttributes />
         <CreateButton variant="contained" onClick={ipfsTransferImage}>
           Create

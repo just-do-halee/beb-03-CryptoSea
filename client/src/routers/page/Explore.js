@@ -59,7 +59,7 @@ const ExploreConatainer = styled(Container)`
 const Explore = (props) => {
   const [getData, setGetData] = useState("ONEPIECE");
   const handleClick = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setGetData(e.target.value);
   };
   useEffect(() => {
@@ -104,9 +104,9 @@ const Explore = (props) => {
 
   let nftArray;
   if (data) {
-    console.log(data);
+    // console.log(data);
     if (data.getNFTs.ok) {
-      console.log(data.getNFTs.ok);
+      // console.log(data.getNFTs.ok);
       nftArray = data.getNFTs.ok;
     }
   }

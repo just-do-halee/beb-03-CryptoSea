@@ -80,6 +80,13 @@ const Navbar = (props) => {
   const navigate = useNavigate();
   const inputRef = useRef(null);
 
+  // 엔터키 눌렀을때 실행 함수
+  // function enterKey(event) {
+  //   if (window.event.keyCode === 13) {
+  //     searchHandler();
+  //   }
+  // }
+
   const searchHandler = () => {
     if (inputRef.current) {
       navigate(`/search/${inputRef.current.value}`);
@@ -107,6 +114,7 @@ const Navbar = (props) => {
           placeholder="Search items,collections,and accounts"
           value={keyword}
           onChange={({ target: { value } = {} }) => setKeyword(value)}
+          // onKeyUp="enterKey(event);"
         />
         <Button onClick={searchHandler}>Search</Button>
       </div>

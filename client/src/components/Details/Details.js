@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
@@ -8,11 +8,19 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Box from "@mui/material/Box";
+
+import Modal from "@mui/material/Modal";
 
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { QUERY_GetNFT } from "../../query";
 import api from "../../web3/web3";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faTag, faListCheck } from "@fortawesome/free-solid-svg-icons";
+
+import { useForm } from "react-hook-form";
 
 const ImageBox = styled.div`
   display: inline-flex;
@@ -110,25 +118,102 @@ const Activity = styled.div`
   margin-bottom: 50px;
 `;
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 // 데이터 바인딩 구현해야됨,,
 
 const LOADING = "loading...";
 
 const Details = (props) => {
+  // modal state
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   // navigate 에서 인수로 넘겨준 값이 들어와야함.
   let { tid } = useParams();
 
   const [owner, setOwner] = useState(LOADING);
   const [creator, setCreator] = useState(LOADING);
 
-  const [expanded, setExpanded] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
 
+  const [price, setPrice] = useState("0");
+
+  const [expanded, setExpanded] = useState(true);
+  const { register, handleSubmit } = useForm();
   const { loading, data: { getNFTs: { ok = [] } = {} } = {} } = useQuery(
     ...QUERY_GetNFT(tid)
   );
 
-  api.ownerOf(tid).then(setOwner);
+  const [firstTrick, setFirstTrick] = useState(false);
 
+  useEffect(() => {
+    api.ownerOf(tid).then((address) => {
+      api.eth.getAccounts().then(([account]) => {
+        if (address === account) {
+          setOwner(account);
+          setIsOwner(true);
+          return;
+        }
+        api
+          .getMarketItemFromTokenId(~~tid)
+          .then(({ price = "0", seller } = {}) => {
+            if (price !== "0") setPrice(api.parseUnits(price));
+            if (typeof seller === "string") {
+              setIsOwner(account.toLowerCase() === seller.toLowerCase());
+              setOwner(seller);
+            }
+          }); // get current market item information
+      });
+    }); // set current token owner
+  }, [firstTrick, owner, tid]);
+
+  useEffect(() => {
+    setFirstTrick(true);
+  }, []);
+
+  //   nft 구매
+  const buyNFT = async () => {
+    const result = await api.createMarketSale(tid, { value: price });
+    console.log(result);
+    window.alert("NFT 구입이 완료되었습니다.");
+  };
+  // 가격 변동
+  const onSubmit = (data) => {
+    console.log(data.price);
+    changePrice(data.price);
+    handleClose();
+  };
+
+  const changePrice = (price) => {
+    if (price !== "0") {
+      api.setPrice(~~tid, ~~price, owner).then((res) => {
+        if (res) {
+          setPrice(price);
+        }
+      });
+      return;
+    }
+    const priceEth = api.parseUnits(price);
+    api
+      .createMarketItem(tid, owner, priceEth)
+      .then(({ status } = {}) => status && setPrice(price));
+  };
+
+  //   api.getMarketItemFromTokenId(tid).then((item) => {
+  //     if (Object.keys(item).length === 0) setPrice(0);
+  //     console.log(item);
   const {
     name,
     description,
@@ -137,7 +222,6 @@ const Details = (props) => {
     attributes,
   } = ok[0] || {};
 
-  const price = 0;
   if (txhash) {
     api.eth
       .getTransactionReceipt("0x" + txhash)
@@ -158,9 +242,39 @@ const Details = (props) => {
           <h1>{name}</h1>
           <p className="userInfo">Owned by {owner}</p>
           <p className="price">Price{price}</p>
-          <Button variant="contained">
-            <Link to="/">Buy now</Link> {/* 경로 설정 연동 필요 */}
-          </Button>
+          {isOwner ? (
+            <>
+              <Button varitant="contained" onClick={handleOpen}>
+                Set Price
+              </Button>
+              <Modal open={open} onClose={handleClose}>
+                <Box sx={style}>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
+                  >
+                    가격을 입력해주세요.
+                  </Typography>
+                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <input
+                        type="text"
+                        placeholder="가격정보"
+                        {...register("price")}
+                      />
+                      <Button type="submit">변경</Button>
+                    </form>
+                  </Typography>
+                </Box>
+              </Modal>
+            </>
+          ) : (
+            <Button variant="contained" onClick={() => buyNFT()}>
+              Buy Now
+            </Button>
+          )}
+
           <Accordion>
             <div className="listings">
               <AccordionSummary
@@ -168,6 +282,7 @@ const Details = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
+                {/* <FontAwesomeIcon icon={faTag} className="tag" /> */}
                 <Typography>Listings</Typography>
               </AccordionSummary>
             </div>
@@ -185,6 +300,7 @@ const Details = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
+                {/* <FontAwesomeIcon icon={faListCheck} className="offer" /> */}
                 <Typography>Offer</Typography>
               </AccordionSummary>
             </div>
@@ -205,6 +321,7 @@ const Details = (props) => {
                 setExpanded(!expanded);
               }}
             >
+              {/* <FontAwesomeIcon icon="fa-solid fa-align-left" /> */}
               <Typography>Description</Typography>
             </AccordionSummary>
           </div>

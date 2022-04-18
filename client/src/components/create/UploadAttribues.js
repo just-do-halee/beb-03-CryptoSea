@@ -92,9 +92,8 @@ const UploadAttributes = () => {
             <div key={index}>
               <h3 className="attributes-type">Properties</h3>
               <FlexContainer>
-                <StyleSelect
-                  label="Type *"
-                  // value={"Type"}
+                <StyledInput
+                  placeholder="Key"
                   onChange={(e) =>
                     dispatch(
                       incrementAttributes({
@@ -104,30 +103,15 @@ const UploadAttributes = () => {
                       })
                     )
                   }
-                >
-                  <MenuItem value="Base">Base</MenuItem>
-                  <MenuItem value="Eyes">Eyes</MenuItem>
-                  <MenuItem value="Level">Level</MenuItem>
-                  <MenuItem value="Stamina">Stamina</MenuItem>
-                  <MenuItem value="Personality">Personality</MenuItem>
-                </StyleSelect>
-
-                <StyledInput
-                  placeholder="Key"
-                  onChange={(e) =>
-                    dispatch(
-                      incrementAttributes({ akey: e.target.value, index })
-                    )
-                  }
                 />
-                {/* <StyledInput
+                <StyledInput
                   placeholder="Value"
                   onChange={(e) =>
                     dispatch(
                       incrementAttributes({ avalue: e.target.value, index })
                     )
                   }
-                /> */}
+                />
               </FlexContainer>
             </div>
           );
