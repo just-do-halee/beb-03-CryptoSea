@@ -30,7 +30,11 @@ contract NFTMarket is ReentrancyGuard {
     }
 
     //a way to access values of the MarketItem struct above by passing an integer ID
-    mapping(uint256 => MarketItem) private idMarketItem;
+    mapping(uint256 => MarketItem) idMarketItem;
+
+    //a way to access values of the item id above by passing an integer Token ID
+    mapping (uint => uint) itemRecorder;
+
 
     //log message (when Item is sold)
     event MarketItemCreated (
@@ -42,6 +46,14 @@ contract NFTMarket is ReentrancyGuard {
         uint256 price,
         bool sold
     );
+
+    function getItemIdFromTokenId(uint tokenId) public view returns (uint itemId) {
+        itemId = itemRecorder[tokenId];
+    }
+
+    function getMarketItemFromTokenId(uint tokenId) public view returns (MarketItem memory) {
+        return idMarketItem[itemRecorder[tokenId]];
+    }
 
     /// @notice function to get listingprice
     function getListingPrice() public view returns (uint256){
@@ -78,6 +90,8 @@ contract NFTMarket is ReentrancyGuard {
 
             //transfer ownership of the nft to the contract itself
             IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+
+            itemRecorder[tokenId] = itemId; // record
 
             //log this transaction
             emit MarketItemCreated(
