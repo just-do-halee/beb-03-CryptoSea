@@ -9,7 +9,7 @@ module.exports = class {
   constructor(
     provider,
     cryptoseaContAddr = '0xEc4B4A77A7DC63B1941c1063C6F25D05170deEb6',
-    cryptoseaMarketContAddr = '0x76497E8c6BCf075C4f6408a1428565fb76141E74'
+    cryptoseaMarketContAddr = '0x0EB75bF1c272790d4A38E569EBC7c4cD8faf36A8'
   ) {
     this.utils = Web3.utils;
     this.provider = provider;
@@ -117,6 +117,13 @@ module.exports = class {
     return this.eth.getBlockNumber();
   }
 
+  //price 변환
+  parseUnits(price) {
+    const result = ethers.utils.parseUnits(price.toString(), 'ether');
+
+    return result;
+  }
+
   //NFT민트후에 마켓에 아이템 생성 (이벤트로 트랜잭션 로그에 기록 남겨주는 방식)
   async createMarketItem(tokenId, price, listingPrice) {
     const result = await this.marketMethods
@@ -126,11 +133,14 @@ module.exports = class {
     return result;
   }
 
-  //price 변환
-  parseUnits(price) {
-    const result = ethers.utils.parseUnits(price.toString(), 'ether');
+  async getItemIdFromTokenId(tokenid) {
+    if (typeof tokenid !== 'number') return {};
+    return this.marketMethods.getItemIdFromTokenId(tokenid);
+  }
 
-    return result;
+  async getMarketItemFromTokenId(tokenid) {
+    if (typeof tokenid !== 'number') return {};
+    return this.marketMethods.getMarketItemFromTokenId(tokenid);
   }
 
   //리스팅 비용 받아오기
