@@ -1,3 +1,3 @@
 # CryptoSea Backend
 
-NestJS + GraphQL + Amazon S3 + IPFS
+NestJS + GraphQL + Postgres + Amazon S3 + IPFS
